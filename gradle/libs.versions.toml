@@ -11,7 +11,7 @@ swiperefreshlayout = "1.1.0"
 #Room
 room = "2.5.2"
 #Simple tools
-simple-commons = "13.4.0"
+simple-commons = "37078b151c"
 #Gradle
 gradlePlugins-agp = "8.1.1"
 #build
