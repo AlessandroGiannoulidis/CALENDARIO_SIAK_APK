@@ -99,6 +99,7 @@ android {
 dependencies {
     implementation(libs.simple.mobile.tools.commons)
     implementation(libs.androidx.multidex)
+implementation(libs.rtl.viewpager)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.print)
