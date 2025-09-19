@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Calendario - Alessandro Giannoulidis — SIAK</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4a9eff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SIAK Calendar">
+    <meta name="description" content="Widget calendario per Alessandro Giannoulidis - SIAK">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzAiIGZpbGw9IiM0QTlFRkYiLz4KPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iMTMyIiBoZWlnaHQ9IjEzMiIgcng9IjgiIGZpbGw9IndoaXRlIi8+Cjx0ZXh0IHg9Ijk2IiB5PSI3MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzRBOUVGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U0lBSzwvdGV4dD4KPGcgZmlsbD0iIzRBOUVGRiI+CjxyZWN0IHg9IjQ1IiB5PSI5MCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSI3NSIgeT0iOTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iMTA1IiB5PSI5MCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSIxMzUiIHk9IjkwIiB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHJ4PSIyIi8+CjxyZWN0IHg9IjQ1IiB5PSIxMTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iNzUiIHk9IjExMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSIxMDUiIHk9IjExMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cGF0aCBkPSJtMTQyIDEyMC41LTMgMy01LTUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8cmVjdCB4PSI0NSIgeT0iMTMwIiB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHJ4PSIyIi8+CjxyZWN0IHg9Ijc1IiB5PSIxMzAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iMTA1IiB5PSIxMzAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPC9nPgo8L3N2Zz4K">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzAiIGZpbGw9IiM0QTlFRkYiLz4KPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iMTMyIiBoZWlnaHQ9IjEzMiIgcng9IjgiIGZpbGw9IndoaXRlIi8+Cjx0ZXh0IHg9Ijk2IiB5PSI3MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzRBOUVGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U0lBSzwvdGV4dD4KPGcgZmlsbD0iIzRBOUVGRiI+CjxyZWN0IHg9IjQ1IiB5PSI5MCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSI3NSIgeT0iOTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iMTA1IiB5PSI5MCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSIxMzUiIHk9IjkwIiB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHJ4PSIyIi8+CjxyZWN0IHg9IjQ1IiB5PSIxMTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iNzUiIHk9IjExMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cmVjdCB4PSIxMDUiIHk9IjExMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1IiByeD0iMiIvPgo8cGF0aCBkPSJtMTQyIDEyMC41LTMgMy01LTUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8cmVjdCB4PSI0NSIgeT0iMTMwIiB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIHJ4PSIyIi8+CjxyZWN0IHg9Ijc1IiB5PSIxMzAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPHJlY3QgeD0iMTA1IiB5PSIxMzAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgcng9IjIiLz4KPC9nPgo8L3N2Zz4K">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            /* Variabili CSS per personalizzazione */
+            --bg-primary: rgba(30, 30, 30, 0.95);
+            --bg-secondary: rgba(45, 45, 45, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4a9eff;
+            --today-bg: rgba(74, 158, 255, 0.2);
+            --past-opacity: 0.5;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            
+            /* Dimensioni testo configurabili */
+            --header-font-size: 1.5rem;
+            --event-title-font-size: 1rem;
+            --event-details-font-size: 0.875rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        /* Modalità widget singolo per Android */
+        body.widget-mode {
+            background: transparent;
+            padding: 8px;
+            min-height: auto;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* PWA Install Button */
+        button[onclick="installPWA()"] {
+            display: none;
+            background: #4ade80 !important;
+        }
+
+        button[onclick="installPWA()"]:hover {
+            background: #22c55e !important;
+        }
+
+        /* Reset and Exit Widget buttons - always visible */
+        .fixed-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            display: flex;
+            gap: 8px;
+        }
+
+        .fixed-btn {
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #333 !important;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .fixed-btn:hover {
+            background: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-1px);
+        }
+
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.9) !important;
+            color: white !important;
+        }
+
+        .reset-btn:hover {
+            background: rgba(220, 38, 38, 1) !important;
+        }
+
+        /* PWA Standalone mode adjustments */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .controls {
+                margin-top: 10px;
+            }
+        }
+
+        /* iOS specific adjustments */
+        @supports (-webkit-touch-callout: none) {
+            body.widget-mode {
+                padding-top: max(20px, env(safe-area-inset-top));
+            }
+        }
+
+        /* Controlli globali */
+        .controls {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        body.widget-mode .controls {
+            display: none;
+        }
+
+        .controls h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-item label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .control-item input[type="range"] {
+            width: 100px;
+        }
+
+        .control-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #3a8eef;
+            transform: translateY(-2px);
+        }
+
+        /* Widget Container */
+        .widgets-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        body.widget-mode .widgets-container {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .widget {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        body.widget-mode .widget {
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 90vh;
+        }
+
+        .widget.transparent {
+            background: rgba(30, 30, 30, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        body.widget-mode .widget.transparent {
+            background: rgba(30, 30, 30, 0.85);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+        }
+
+        body.widget-mode .widget:hover {
+            transform: none;
+        }
+
+        .widget-header {
+            font-size: var(--header-font-size);
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.widget-mode .widget-header {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .widget-controls {
+            display: flex;
+            gap: 8px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .widget:hover .widget-controls {
+            opacity: 1;
+        }
+
+        .widget-control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--text-primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .widget-control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: none;
+        }
+
+        .events-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        body.widget-mode .events-container {
+            max-height: calc(90vh - 60px);
+            padding-right: 8px;
+        }
+
+        /* Scrollbar personalizzata */
+        .events-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .events-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .events-container::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        body.widget-mode .events-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        /* Eventi */
+        .event {
+            background: var(--bg-secondary);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        body.widget-mode .event {
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .event:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        body.widget-mode .event:hover {
+            transform: translateX(2px);
+        }
+
+        .event.past {
+            opacity: var(--past-opacity);
+            border-left-color: #666;
+        }
+
+        .event.today {
+            background: var(--today-bg);
+            border-left-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .event-time {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: var(--event-details-font-size);
+        }
+
+        .event-title {
+            font-size: var(--event-title-font-size);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .event-details {
+            font-size: var(--event-details-font-size);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .event-location {
+            margin-top: 5px;
+            font-size: var(--event-details-font-size);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Status */
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        body.widget-mode .loading {
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        body.widget-mode .error {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Status indicator nel widget */
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            margin-left: 8px;
+        }
+
+        .status-indicator.loading {
+            background: #fbbf24;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.error {
+            background: #ef4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .widgets-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-group {
+                flex-direction: column;
+            }
+
+            body.widget-mode {
+                padding: 4px;
+            }
+
+            body.widget-mode .widget {
+                padding: 8px;
+                border-radius: 6px;
+            }
+
+            body.widget-mode .widget-header {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Animazioni */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .event {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Filtro future only */
+        .widget.future-only .event.past {
+            display: none;
+        }
+
+        /* Modalità compatta per widget Android */
+        body.compact-mode {
+            font-size: 0.9em;
+        }
+
+        body.compact-mode .widget {
+            padding: 8px;
+        }
+
+        body.compact-mode .widget-header {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+        }
+
+        body.compact-mode .event {
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Controlli fissi sempre visibili -->
+    <div class="fixed-controls">
+        <button class="fixed-btn" onclick="exitWidgetMode()" id="exitWidgetBtn" style="display: none;" title="Esci dalla modalità widget">
+            ⬅️ Esci
+        </button>
+        <button class="fixed-btn reset-btn" onclick="resetToDefault()" title="Reset alle impostazioni predefinite">
+            🔄 Reset
+        </button>
+    </div>
+
+    <div class="app-container">
+        <!-- Controlli -->
+        <div class="controls">
+            <h2>⚙️ Impostazioni Widget</h2>
+            <div class="control-group">
+                <div class="control-item">
+                    <label for="headerSize">Dimensione Header:</label>
+                    <input type="range" id="headerSize" min="16" max="32" value="24">
+                    <span id="headerSizeValue">24px</span>
+                </div>
+                <div class="control-item">
+                    <label for="titleSize">Dimensione Titolo:</label>
+                    <input type="range" id="titleSize" min="12" max="24" value="16">
+                    <span id="titleSizeValue">16px</span>
+                </div>
+                <div class="control-item">
+                    <label for="detailsSize">Dimensione Dettagli:</label>
+                    <input type="range" id="detailsSize" min="10" max="18" value="14">
+                    <span id="detailsSizeValue">14px</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-item">
+                    <input type="checkbox" id="transparentBg" checked>
+                    <label for="transparentBg">Sfondo Trasparente</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="showPastEvents" checked>
+                    <label for="showPastEvents">Mostra Eventi Passati</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="futureOnly">
+                    <label for="futureOnly">Solo Eventi Futuri</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="widgetMode">
+                    <label for="widgetMode">Modalità Widget Android</label>
+                </div>
+                <div class="control-item">
+                    <input type="checkbox" id="compactMode">
+                    <label for="compactMode">Modalità Compatta</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <button onclick="refreshCalendar()">🔄 Aggiorna Ora</button>
+                <button onclick="addWidget()">➕ Aggiungi Widget</button>
+                <button onclick="copyWidgetUrl()">📱 Copia URL Widget</button>
+                <button onclick="installPWA()">📲 Installa App</button>
+                <button onclick="enableAndroidWidget()">🏠 Widget Android</button>
+                <div class="control-item">
+                    <span class="status" id="lastUpdate">Ultimo aggiornamento: --</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container dei Widget -->
+        <div class="widgets-container" id="widgetsContainer">
+            <!-- I widget verranno aggiunti dinamicamente qui -->
+        </div>
+    </div>
+
+    <script>
+        // Configurazione
+        const CONFIG = {
+            icsUrl: 'https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics',
+            proxyUrl: 'https://api.allorigins.win/raw?url=', // Proxy CORS
+            updateInterval: 8 * 60 * 60 * 1000, // 8 ore in millisecondi
+            daysBefore: 10,
+            daysAfter: 60,
+            widgetTitle: 'Alessandro Giannoulidis — SIAK'
+        };
+
+        // Stato dell'applicazione
+        let appState = {
+            events: [],
+            widgets: [{ id: 'widget-1', title: CONFIG.widgetTitle, futureOnly: false }],
+            lastUpdate: null,
+            settings: {
+                headerSize: 24,
+                titleSize: 16,
+                detailsSize: 14,
+                transparentBg: true,
+                showPastEvents: true,
+                futureOnly: false,
+                widgetMode: false,
+                compactMode: false
+            }
+        };
+
+        // Parser ICS migliorato
+        class ICSParser {
+            static parseICS(icsText) {
+                const events = [];
+                const lines = icsText.split(/\r?\n/);
+                let currentEvent = null;
+                let isInEvent = false;
+
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i];
+                    
+                    // Gestione linee continuate (iniziano con spazio)
+                    while (i + 1 < lines.length && lines[i + 1].match(/^\s/)) {
+                        line += lines[i + 1].trim();
+                        i++;
+                    }
+
+                    if (line === 'BEGIN:VEVENT') {
+                        isInEvent = true;
+                        currentEvent = {};
+                    } else if (line === 'END:VEVENT' && currentEvent) {
+                        isInEvent = false;
+                        if (currentEvent.start) {
+                            events.push(this.processEvent(currentEvent));
+                        }
+                        currentEvent = null;
+                    } else if (isInEvent && currentEvent) {
+                        this.parseLine(line, currentEvent);
+                    }
+                }
+
+                return events;
+            }
+
+            static parseLine(line, event) {
+                const colonIndex = line.indexOf(':');
+                if (colonIndex === -1) return;
+
+                const key = line.substring(0, colonIndex);
+                const value = line.substring(colonIndex + 1);
+
+                // Gestione delle proprietà con parametri
+                const semicolonIndex = key.indexOf(';');
+                const propertyName = semicolonIndex > -1 ? key.substring(0, semicolonIndex) : key;
+
+                switch (propertyName) {
+                    case 'SUMMARY':
+                        event.summary = this.unescapeText(value);
+                        break;
+                    case 'DESCRIPTION':
+                        event.description = this.unescapeText(value);
+                        break;
+                    case 'LOCATION':
+                        event.location = this.unescapeText(value);
+                        break;
+                    case 'DTSTART':
+                        event.start = this.parseDate(value, key);
+                        break;
+                    case 'DTEND':
+                        event.end = this.parseDate(value, key);
+                        break;
+                    case 'UID':
+                        event.uid = value;
+                        break;
+                }
+            }
+
+            static parseDate(dateStr, fullKey) {
+                // Rimuovi timezone ID se presente
+                dateStr = dateStr.replace(/TZID=[^:]*:/, '');
+                
+                // Parse diverse forme di date
+                if (dateStr.includes('T')) {
+                    // DateTime format: YYYYMMDDTHHMMSS
+                    const year = dateStr.substr(0, 4);
+                    const month = dateStr.substr(4, 2);
+                    const day = dateStr.substr(6, 2);
+                    const hour = dateStr.substr(9, 2);
+                    const minute = dateStr.substr(11, 2);
+                    const second = dateStr.substr(13, 2) || '00';
+                    
+                    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+                } else if (dateStr.length === 8) {
+                    // Date only format: YYYYMMDD
+                    const year = dateStr.substr(0, 4);
+                    const month = dateStr.substr(4, 2);
+                    const day = dateStr.substr(6, 2);
+                    
+                    return new Date(`${year}-${month}-${day}T00:00:00`);
+                }
+                
+                return new Date(dateStr);
+            }
+
+            static unescapeText(text) {
+                return text
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\,/g, ',')
+                    .replace(/\\;/g, ';')
+                    .replace(/\\\\/g, '\\');
+            }
+
+            static processEvent(event) {
+                // Calcola se è tutto il giorno
+                if (event.start && event.end) {
+                    const duration = event.end - event.start;
+                    const oneDayMs = 24 * 60 * 60 * 1000;
+                    event.allDay = duration >= oneDayMs || 
+                                  (event.start.getHours() === 0 && event.end.getHours() === 0);
+                }
+                
+                return event;
+            }
+        }
+
+        // Funzioni di utilità 
+        function formatDate(date) {
+            const options = { 
+                weekday: 'short', 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            };
+            return date.toLocaleDateString('it-IT', options);
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('it-IT', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function isToday(date) {
+            const today = new Date();
+            return date.toDateString() === today.toDateString();
+        }
+
+        function isPast(date) {
+            return date < new Date();
+        }
+
+        function isWithinRange(date) {
+            const now = new Date();
+            const startRange = new Date(now);
+            startRange.setDate(startRange.getDate() - CONFIG.daysBefore);
+            startRange.setHours(0, 0, 0, 0);
+            
+            const endRange = new Date(now);
+            endRange.setDate(endRange.getDate() + CONFIG.daysAfter);
+            endRange.setHours(23, 59, 59, 999);
+            
+            return date >= startRange && date <= endRange;
+        }
+
+        // Caricamento e gestione eventi
+        async function loadCalendar() {
+            try {
+                showLoading();
+                setStatusIndicators('loading');
+                
+                // Usa il proxy per evitare problemi CORS
+                const response = await fetch(CONFIG.proxyUrl + encodeURIComponent(CONFIG.icsUrl));
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const icsText = await response.text();
+                const events = ICSParser.parseICS(icsText);
+                
+                // Filtra e ordina eventi
+                appState.events = events
+                    .filter(event => isWithinRange(event.start))
+                    .sort((a, b) => a.start - b.start);
+                
+                appState.lastUpdate = new Date();
+                updateLastUpdateDisplay();
+                renderWidgets();
+                setStatusIndicators('success');
+                
+                // Salva nella memoria per cache
+                appState.cachedEvents = [...appState.events];
+                appState.cachedUpdate = new Date(appState.lastUpdate);
+                
+            } catch (error) {
+                console.error('Errore nel caricamento del calendario:', error);
+                setStatusIndicators('error');
+                showError('Impossibile caricare il calendario. Riprova più tardi.');
+                
+                // Prova a caricare dalla cache
+                loadFromCache();
+            }
+        }
+
+        function loadFromCache() {
+            if (appState.cachedEvents) {
+                appState.events = [...appState.cachedEvents];
+                appState.lastUpdate = new Date(appState.cachedUpdate);
+                updateLastUpdateDisplay();
+                renderWidgets();
+            }
+        }
+
+        function setStatusIndicators(status) {
+            document.querySelectorAll('.status-indicator').forEach(indicator => {
+                indicator.className = 'status-indicator';
+                if (status !== 'success') {
+                    indicator.classList.add(status);
+                }
+            });
+        }
+
+        function showLoading() {
+            document.querySelectorAll('.events-container').forEach(container => {
+                container.innerHTML = '<div class="loading">⏳ Caricamento eventi...</div>';
+            });
+        }
+
+        function showError(message) {
+            document.querySelectorAll('.events-container').forEach(container => {
+                container.innerHTML = `<div class="error">⚠️ ${message}</div>`;
+            });
+        }
+
+        function updateLastUpdateDisplay() {
+            const element = document.getElementById('lastUpdate');
+            if (element && appState.lastUpdate) {
+                element.textContent = `Ultimo aggiornamento: ${formatDate(appState.lastUpdate)} ${formatTime(appState.lastUpdate)}`;
+            }
+        }
+
+        // Rendering migliorato
+        function renderWidgets() {
+            const container = document.getElementById('widgetsContainer');
+            container.innerHTML = '';
+            
+            appState.widgets.forEach(widget => {
+                const widgetElement = createWidgetElement(widget);
+                container.appendChild(widgetElement);
+            });
+        }
+
+        function createWidgetElement(widget) {
+            const div = document.createElement('div');
+            div.className = `widget ${appState.settings.transparentBg ? 'transparent' : ''} ${widget.futureOnly ? 'future-only' : ''}`;
+            div.id = widget.id;
+            
+            div.innerHTML = `
+                <div class="widget-header">
+                    <span>${widget.title}</span>
+                    <div style="display: flex; align-items: center;">
+                        <div class="status-indicator"></div>
+                        <div class="widget-controls">
+                            <button class="widget-control-btn" onclick="toggleWidgetFuture('${widget.id}')" title="Filtra eventi futuri">🔮</button>
+                            <button class="widget-control-btn" onclick="refreshWidget('${widget.id}')" title="Aggiorna">🔄</button>
+                            ${appState.widgets.length > 1 ? `<button class="widget-control-btn" onclick="removeWidget('${widget.id}')" title="Rimuovi">❌</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="events-container">${renderEvents(widget)}</div>
+            `;
+            
+            return div;
+        }
+
+        function renderEvents(widget = null) {
+            let filteredEvents = [...appState.events];
+            
+            // Applica filtri
+            if ((widget && widget.futureOnly) || appState.settings.futureOnly) {
+                filteredEvents = filteredEvents.filter(event => !isPast(event.start));
+            } else if (!appState.settings.showPastEvents) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                filteredEvents = filteredEvents.filter(event => event.start >= today);
+            }
+            
+            if (filteredEvents.length === 0) {
+                return '<div class="loading">📅 Nessun evento da visualizzare</div>';
+            }
+            
+            return filteredEvents.map(event => {
+                const eventClasses = ['event'];
+                if (isPast(event.end || event.start)) eventClasses.push('past');
+                if (isToday(event.start)) eventClasses.push('today');
+                
+                const timeStr = event.allDay ? 
+                    'Tutto il giorno' : 
+                    `${formatTime(event.start)} - ${formatTime(event.end || event.start)}`;
+                
+                return `
+                    <div class="${eventClasses.join(' ')}">
+                        <div class="event-time">📅 ${formatDate(event.start)} • ${timeStr}</div>
+                        <div class="event-title">${event.summary || 'Evento senza titolo'}</div>
+                        ${event.description ? `<div class="event-details">${event.description}</div>` : ''}
+                        ${event.location ? `<div class="event-location">📍 ${event.location}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Funzioni per widget individuali
+        function toggleWidgetFuture(widgetId) {
+            const widget = appState.widgets.find(w => w.id === widgetId);
+            if (widget) {
+                widget.futureOnly = !widget.futureOnly;
+                const widgetElement = document.getElementById(widgetId);
+                if (widget.futureOnly) {
+                    widgetElement.classList.add('future-only');
+                } else {
+                    widgetElement.classList.remove('future-only');
+                }
+                const eventsContainer = widgetElement.querySelector('.events-container');
+                eventsContainer.innerHTML = renderEvents(widget);
+            }
+        }
+
+        function refreshWidget(widgetId) {
+            loadCalendar();
+        }
+
+        function removeWidget(widgetId) {
+            appState.widgets = appState.widgets.filter(w => w.id !== widgetId);
+            renderWidgets();
+        }
+
+        function copyWidgetUrl() {
+            const baseUrl = window.location.href.split('?')[0];
+            const widgetUrl = `${baseUrl}?widget=true&transparent=${appState.settings.transparentBg}&compact=${appState.settings.compactMode}`;
+            
+            navigator.clipboard.then(() => {
+                navigator.clipboard.writeText(widgetUrl);
+                alert('URL del widget copiato negli appunti!');
+            }).catch(() => {
+                // Fallback per browser non supportati
+                const textarea = document.createElement('textarea');
+                textarea.value = widgetUrl;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('URL del widget copiato negli appunti!');
+            });
+        }
+
+        // Gestione impostazioni migliorata
+        function setupControls() {
+            // Slider dimensioni testo
+            document.getElementById('headerSize').addEventListener('input', (e) => {
+                const value = e.target.value;
+                appState.settings.headerSize = value;
+                document.documentElement.style.setProperty('--header-font-size', `${value}px`);
+                document.getElementById('headerSizeValue').textContent = `${value}px`;
+            });
+            
+            document.getElementById('titleSize').addEventListener('input', (e) => {
+                const value = e.target.value;
+                appState.settings.titleSize = value;
+                document.documentElement.style.setProperty('--event-title-font-size', `${value}px`);
+                document.getElementById('titleSizeValue').textContent = `${value}px`;
+            });
+            
+            document.getElementById('detailsSize').addEventListener('input', (e) => {
+                const value = e.target.value;
+                appState.settings.detailsSize = value;
+                document.documentElement.style.setProperty('--event-details-font-size', `${value}px`);
+                document.getElementById('detailsSizeValue').textContent = `${value}px`;
+            });
+            
+            // Checkbox
+            document.getElementById('transparentBg').addEventListener('change', (e) => {
+                appState.settings.transparentBg = e.target.checked;
+                renderWidgets();
+            });
+            
+            document.getElementById('showPastEvents').addEventListener('change', (e) => {
+                appState.settings.showPastEvents = e.target.checked;
+                if (e.target.checked) {
+                    document.getElementById('futureOnly').checked = false;
+                    appState.settings.futureOnly = false;
+                }
+                renderWidgets();
+            });
+            
+            document.getElementById('futureOnly').addEventListener('change', (e) => {
+                appState.settings.futureOnly = e.target.checked;
+                if (e.target.checked) {
+                    document.getElementById('showPastEvents').checked = false;
+                    appState.settings.showPastEvents = false;
+                }
+                renderWidgets();
+            });
+
+            document.getElementById('widgetMode').addEventListener('change', (e) => {
+                appState.settings.widgetMode = e.target.checked;
+                toggleWidgetMode(e.target.checked);
+                // Salva immediatamente la modifica
+                localStorage.setItem('widgetSettings', JSON.stringify(appState.settings));
+            });
+
+            document.getElementById('compactMode').addEventListener('change', (e) => {
+                appState.settings.compactMode = e.target.checked;
+                toggleCompactMode(e.target.checked);
+            });
+        }
+
+        function toggleWidgetMode(enable) {
+            if (enable) {
+                document.body.classList.add('widget-mode');
+                document.getElementById('exitWidgetBtn').style.display = 'block';
+            } else {
+                document.body.classList.remove('widget-mode');
+                document.getElementById('exitWidgetBtn').style.display = 'none';
+            }
+        }
+
+        // Funzione per uscire dalla modalità widget
+        function exitWidgetMode() {
+            appState.settings.widgetMode = false;
+            document.getElementById('widgetMode').checked = false;
+            toggleWidgetMode(false);
+            
+            // Salva le impostazioni aggiornate
+            localStorage.setItem('widgetSettings', JSON.stringify(appState.settings));
+        }
+
+        // Funzione per reset completo
+        function resetToDefault() {
+            if (confirm('Sei sicuro di voler ripristinare tutte le impostazioni predefinite? Questa azione cancellerà tutte le personalizzazioni.')) {
+                // Cancella impostazioni salvate
+                localStorage.removeItem('widgetSettings');
+                
+                // Reset dello stato dell'app
+                appState.settings = {
+                    headerSize: 24,
+                    titleSize: 16,
+                    detailsSize: 14,
+                    transparentBg: true,
+                    showPastEvents: true,
+                    futureOnly: false,
+                    widgetMode: false,
+                    compactMode: false
+                };
+                
+                // Reset widget
+                appState.widgets = [{ id: 'widget-1', title: CONFIG.widgetTitle, futureOnly: false }];
+                
+                // Ricarica la pagina per applicare tutte le modifiche
+                window.location.reload();
+            }
+        }
+
+        function toggleCompactMode(enable) {
+            if (enable) {
+                document.body.classList.add('compact-mode');
+            } else {
+                document.body.classList.remove('compact-mode');
+            }
+        }
+
+        // Funzioni globali
+        function refreshCalendar() {
+            loadCalendar();
+        }
+
+        function addWidget() {
+            const newWidget = {
+                id: `widget-${Date.now()}`,
+                title: CONFIG.widgetTitle,
+                futureOnly: false
+            };
+            appState.widgets.push(newWidget);
+            renderWidgets();
+        }
+
+        // Auto-aggiornamento
+        function setupAutoUpdate() {
+            setInterval(() => {
+                loadCalendar();
+            }, CONFIG.updateInterval);
+        }
+
+        // Gestione URL parameters per modalità widget
+        function handleUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('widget') === 'true') {
+                appState.settings.widgetMode = true;
+                document.body.classList.add('widget-mode');
+            }
+            
+            if (urlParams.get('transparent') === 'true') {
+                appState.settings.transparentBg = true;
+            }
+            
+            if (urlParams.get('compact') === 'true') {
+                appState.settings.compactMode = true;
+                document.body.classList.add('compact-mode');
+            }
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gestisce parametri URL prima di tutto
+            handleUrlParameters();
+            
+            setupControls();
+            loadCalendar();
+            setupAutoUpdate();
+            
+            // Carica impostazioni salvate
+            const savedSettings = JSON.parse(localStorage.getItem('widgetSettings') || '{}');
+            appState.settings = { ...appState.settings, ...savedSettings };
+            
+            // Applica impostazioni salvate ai controlli
+            document.getElementById('headerSize').value = appState.settings.headerSize;
+            document.getElementById('titleSize').value = appState.settings.titleSize;
+            document.getElementById('detailsSize').value = appState.settings.detailsSize;
+            document.getElementById('transparentBg').checked = appState.settings.transparentBg;
+            document.getElementById('showPastEvents').checked = appState.settings.showPastEvents;
+            document.getElementById('futureOnly').checked = appState.settings.futureOnly;
+            document.getElementById('widgetMode').checked = appState.settings.widgetMode;
+            document.getElementById('compactMode').checked = appState.settings.compactMode;
+            
+            // Aggiorna display valori
+            document.getElementById('headerSizeValue').textContent = `${appState.settings.headerSize}px`;
+            document.getElementById('titleSizeValue').textContent = `${appState.settings.titleSize}px`;
+            document.getElementById('detailsSizeValue').textContent = `${appState.settings.detailsSize}px`;
+            
+            // Applica stili CSS
+            document.documentElement.style.setProperty('--header-font-size', `${appState.settings.headerSize}px`);
+            document.documentElement.style.setProperty('--event-title-font-size', `${appState.settings.titleSize}px`);
+            document.documentElement.style.setProperty('--event-details-font-size', `${appState.settings.detailsSize}px`);
+            
+            // Applica modalità 
+            if (appState.settings.widgetMode) {
+                document.body.classList.add('widget-mode');
+                document.getElementById('exitWidgetBtn').style.display = 'block';
+            }
+            if (appState.settings.compactMode) {
+                document.body.classList.add('compact-mode');
+            }
+            
+            // Salva impostazioni quando la pagina si chiude
+            window.addEventListener('beforeunload', () => {
+                localStorage.setItem('widgetSettings', JSON.stringify(appState.settings));
+            });
+
+            // Salva anche periodicamente
+            setInterval(() => {
+                localStorage.setItem('widgetSettings', JSON.stringify(appState.settings));
+            }, 30000); // ogni 30 secondi
+
+            // Gestione errori globali
+            window.addEventListener('error', (e) => {
+                console.error('Errore globale:', e.error);
+                setStatusIndicators('error');
+            });
+
+            // Gestione visibilità pagina per ottimizzare prestazioni
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    // Pausa aggiornamenti quando non visibile
+                    clearInterval(appState.autoUpdateInterval);
+                } else {
+                    // Riprendi aggiornamenti quando torna visibile
+                    setupAutoUpdate();
+                    // Aggiorna se è passato molto tempo
+                    if (appState.lastUpdate && (new Date() - appState.lastUpdate) > CONFIG.updateInterval) {
+                        loadCalendar();
+                    }
+                }
+            });
+        });
+
+        // Gestione eventi touch per mobile
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe up - refresh
+                    loadCalendar();
+                }
+            }
+        }
+
+        // Esposizione di funzioni globali per uso esterno
+        window.CalendarWidget = {
+            refresh: loadCalendar,
+            toggleMode: toggleWidgetMode,
+            toggleCompact: toggleCompactMode,
+            getEvents: () => appState.events,
+            getSettings: () => appState.settings
+        };
+
+        // PWA Installation e Widget Android
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Previene la visualizzazione automatica del banner di installazione
+            e.preventDefault();
+            // Salva l'evento per poterlo utilizzare successivamente
+            deferredPrompt = e;
+            
+            // Mostra il pulsante di installazione se non è già installata
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                showInstallButton();
+            }
+        });
+
+        function showInstallButton() {
+            const installBtn = document.querySelector('button[onclick="installPWA()"]');
+            if (installBtn) {
+                installBtn.style.display = 'block';
+                installBtn.style.background = '#4ade80';
+            }
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                // Mostra il prompt di installazione
+                deferredPrompt.prompt();
+                
+                // Attendi la scelta dell'utente
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installata con successo');
+                        // Nascondi il pulsante dopo l'installazione
+                        const installBtn = document.querySelector('button[onclick="installPWA()"]');
+                        if (installBtn) {
+                            installBtn.style.display = 'none';
+                        }
+                        // Mostra istruzioni per il widget
+                        showWidgetInstructions();
+                    }
+                    deferredPrompt = null;
+                });
+            } else if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                // Istruzioni per iOS
+                alert('Per installare l\'app su iOS:\n1. Tocca il pulsante Condividi in Safari\n2. Seleziona "Aggiungi a Home"\n3. Tocca "Aggiungi"');
+            } else {
+                // Fallback per altri casi
+                alert('Per installare l\'app:\n1. Apri il menu del browser\n2. Cerca "Installa app" o "Aggiungi alla home screen"\n3. Conferma l\'installazione');
+            }
+        }
+
+        function enableAndroidWidget() {
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+                // App già installata - mostra istruzioni widget
+                showWidgetInstructions();
+            } else {
+                // App non installata
+                alert('Prima installa l\'app con il pulsante "📲 Installa App", poi potrai aggiungere il widget alla home screen.');
+            }
+        }
+
+        function showWidgetInstructions() {
+            const instructions = `
+🏠 Per aggiungere il widget alla home screen di Android:
+
+1. Vai alla home screen del tuo telefono
+2. Tieni premuto su uno spazio vuoto
+3. Tocca "Widget" o "Widgets"
+4. Cerca "SIAK Calendar" o "Chrome"
+5. Seleziona il widget del calendario
+6. Trascinalo sulla home screen
+7. Ridimensiona se necessario
+
+📱 Alternative:
+- Su alcuni Android: Menu → Widgets → App Web
+- Su Samsung: Tieni premuto → Widget → Trova l'app
+
+Il widget mostrerà automaticamente gli eventi in modalità compatta!`;
+            
+            alert(instructions);
+        }
+
+        // Gestisce la modalità standalone (quando l'app è installata)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+            // App installata - configurazione automatica per widget
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    // Se l'URL contiene parametri widget, attiva modalità widget
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('widget') === 'true' || window.innerWidth < 400) {
+                        appState.settings.widgetMode = true;
+                        appState.settings.compactMode = true;
+                        appState.settings.transparentBg = true;
+                        document.body.classList.add('widget-mode', 'compact-mode');
+                        if (document.getElementById('widgetMode')) {
+                            document.getElementById('widgetMode').checked = true;
+                        }
+                    }
+                }, 100);
+            });
+            
+            // Nascondi il pulsante install se l'app è già installata
+            const installBtn = document.querySelector('button[onclick="installPWA()"]');
+            if (installBtn) {
+                installBtn.style.display = 'none';
+            }
+        }
+
+        // Registrazione per notifiche (opzionale per aggiornamenti widget)
+        function requestNotificationPermission() {
+            if ('Notification' in window && 'serviceWorker' in navigator) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        console.log('Permesso notifiche concesso');
+                        // Qui potresti implementare notifiche per aggiornamenti calendario
+                    }
+                });
+            }
+        }
+
+        // Nasconde il pulsante di installazione se l'app è già installata
+        window.addEventListener('appinstalled', () => {
+            const installBtn = document.querySelector('button[onclick="installPWA()"]');
+            if (installBtn) {
+                installBtn.style.display = 'none';
+            }
+            showWidgetInstructions();
+        });
+    </script>
+</body>
+
+</html>
