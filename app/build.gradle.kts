@@ -1,9 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
+    id("com.android.application") version "8.1.4"
+    id("org.jetbrains.kotlin.android") version "1.9.10"
 }
 
 android {
@@ -46,10 +45,10 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
-implementation("org.mnode.ical4j:ical4j:4.0.1")
+    implementation("org.mnode.ical4j:ical4j:3.2.10")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 }
