@@ -3,11 +3,11 @@
 
     <application
         android:allowBackup="true"
-        android:label="WidgetPWA"
+        android:label="WidgetCalendario"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <!-- Receiver del widget -->
-        <receiver android:name=".PwaWidget">
+        <receiver android:name=".PwaWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
