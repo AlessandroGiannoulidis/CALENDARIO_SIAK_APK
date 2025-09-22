@@ -4,6 +4,31 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
+import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.model.Component
+import net.fortuna.ical4j.model.component.VEvent
+import java.net.URL
+import java.io.InputStream
+
+private fun getIcsEvents(): List<String> {
+    val url = URL("https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics")
+    val connection = url.openConnection()
+    connection.connectTimeout = 5000
+    connection.readTimeout = 5000
+    val inputStream: InputStream = connection.getInputStream()
+    val builder = CalendarBuilder()
+    val calendar = builder.build(inputStream)
+    val eventsList = mutableListOf<String>()
+    for (component in calendar.components) {
+        if (component.name == Component.VEVENT) {
+            val event = component as VEvent
+            val summary = event.summary.value
+            val start = event.startDate.value // data in formato YYYYMMDD
+            eventsList.add("$start - $summary")
+        }
+    }
+    return eventsList
+}
 
 class PwaWidget : AppWidgetProvider() {
 
@@ -18,32 +43,24 @@ class PwaWidget : AppWidgetProvider() {
     }
 
     companion object {
-    fun updateAppWidget(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
-    ) {
-        val views = RemoteViews(context.packageName, R.layout.widget_layout)
+   fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+    // Crea la RemoteViews associata al layout del widget
+    val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
 
-        // Step 1: Lista di eventi da mostrare
-        val events = listOf("Evento 1", "Evento 2", "Evento 3") // QUI metterai i dati reali
+    // Leggi gli eventi direttamente dal file .ics
+    val events = getIcsEvents()
 
-        // Step 2: Ottieni il LinearLayout dove inserire gli eventi
-        val eventsLayoutId = R.id.widget_events
+    // Pulisci eventuali vecchie viste
+    views.removeAllViews(R.id.widget_events)
 
-        // Step 3: Pulire eventuali vecchi eventi
-        views.removeAllViews(eventsLayoutId)
-
-        // Step 4: Aggiungere ogni evento
-        for (event in events) {
-            val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-            eventView.setTextViewText(R.id.event_title, event)
-            views.addView(eventsLayoutId, eventView)
-        }
-
-        // Step 5: Aggiornare il widget
-        appWidgetManager.updateAppWidget(appWidgetId, views)
+    // Aggiungi ogni evento come un item del widget
+    for (event in events) {
+        val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
+        eventView.setTextViewText(R.id.event_title, event)
+        views.addView(R.id.widget_events, eventView)
     }
-}
 
+    // Aggiorna il widget sullo schermo
+    appWidgetManager.updateAppWidget(appWidgetId, views)
+}
 }
