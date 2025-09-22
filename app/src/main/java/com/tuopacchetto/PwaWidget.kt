@@ -96,10 +96,16 @@ class PwaWidget : AppWidgetProvider() {
 
                 views.removeAllViews(R.id.widget_events)
                 for (event in events) {
-                    val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                    eventView.setTextViewText(R.id.event_title, event)
-                    views.addView(R.id.widget_events, eventView)
-                }
+    val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
+    eventView.setTextViewText(R.id.event_title, event.text)
+
+    // Se l'evento è già passato, rendilo opacizzato
+    if (event.startDate.before(Date())) {
+        eventView.setInt(R.id.event_title, "setAlpha", 100) // 0-255, più basso = più trasparente
+    }
+
+    views.addView(R.id.widget_events, eventView)
+}
 
                 appWidgetManager.updateAppWidget(appWidgetId, views)
 
