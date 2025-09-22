@@ -18,16 +18,32 @@ class PwaWidget : AppWidgetProvider() {
     }
 
     companion object {
-        fun updateAppWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
-        ) {
-            val views = RemoteViews(context.packageName, R.layout.widget_layout)
-            
-            // Qui potremo aggiornare la vista con contenuti del calendario
+    fun updateAppWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int
+    ) {
+        val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+        // Step 1: Lista di eventi da mostrare
+        val events = listOf("Evento 1", "Evento 2", "Evento 3") // QUI metterai i dati reali
+
+        // Step 2: Ottieni il LinearLayout dove inserire gli eventi
+        val eventsLayoutId = R.id.widget_events
+
+        // Step 3: Pulire eventuali vecchi eventi
+        views.removeAllViews(eventsLayoutId)
+
+        // Step 4: Aggiungere ogni evento
+        for (event in events) {
+            val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
+            eventView.setTextViewText(R.id.event_title, event)
+            views.addView(eventsLayoutId, eventView)
         }
+
+        // Step 5: Aggiornare il widget
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
+}
+
 }
