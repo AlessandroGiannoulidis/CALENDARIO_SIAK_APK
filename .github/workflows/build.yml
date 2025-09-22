@@ -30,23 +30,8 @@ jobs:
       with:
         gradle-version: '8.2.1'
 
-    - name: Debug Gradle Wrapper
-      run: |
-        echo "Checking gradle wrapper files..."
-        ls -la gradle/wrapper/
-        echo "Gradle wrapper jar size:"
-        ls -lh gradle/wrapper/gradle-wrapper.jar
-        echo "Java version:"
-        java -version
-        echo "JAVA_HOME: $JAVA_HOME"
-
     - name: Build Debug APK
-      run: |
-        if [ -f "./gradlew" ] && [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-          ./gradlew assembleDebug --stacktrace --info
-        else
-          gradle assembleDebug --stacktrace --info
-        fi
+      run: ./gradlew assembleDebug --stacktrace --info
 
     - name: Upload APK
       uses: actions/upload-artifact@v3
