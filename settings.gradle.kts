@@ -15,4 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "CALENDARIO_SIAK_APK"
 include(":app")
