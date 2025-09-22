@@ -58,9 +58,8 @@ class PwaWidget : AppWidgetProvider() {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
-
-    // Funzione normale della classe, fuori dal companion object
-    private fun scheduleNextUpdate(context: Context, appWidgetId: Int) {
+    companion object {
+         private fun scheduleNextUpdate(context: Context, appWidgetId: Int) {
         val intent = Intent(context, PwaWidget::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
@@ -83,8 +82,6 @@ class PwaWidget : AppWidgetProvider() {
             pendingIntent
         )
     }
-
-    companion object {
     fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         // Lanciamo il lavoro in background
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
