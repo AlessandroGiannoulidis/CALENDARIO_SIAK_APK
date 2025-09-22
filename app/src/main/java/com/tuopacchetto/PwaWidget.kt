@@ -11,6 +11,9 @@ import java.net.URL
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Intent
 
 private fun getIcsEvents(): List<String> {
     val url = URL("https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics")
@@ -58,25 +61,47 @@ class PwaWidget : AppWidgetProvider() {
         }
     }
 
-    companion object {
-   fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-    // Crea la RemoteViews associata al layout del widget
-    val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
+    // Funzione normale della classe, fuori dal companion object
+    private fun scheduleNextUpdate(context: Context, appWidgetId: Int) {
+        val intent = Intent(context, PwaWidget::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
+        }
 
-    // Leggi gli eventi direttamente dal file .ics
-    val events = getIcsEvents()
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            appWidgetId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-    // Pulisci eventuali vecchie viste
-    views.removeAllViews(R.id.widget_events)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intervalMillis = 1000 * 60 * 60 * 8 // 8 ore
+        val nextUpdate = System.currentTimeMillis() + intervalMillis
 
-    // Aggiungi ogni evento come un item del widget
-    for (event in events) {
-        val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-        eventView.setTextViewText(R.id.event_title, event)
-        views.addView(R.id.widget_events, eventView)
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            nextUpdate,
+            pendingIntent
+        )
     }
 
-    // Aggiorna il widget sullo schermo
-    appWidgetManager.updateAppWidget(appWidgetId, views)
-}
+    companion object {
+        fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+            val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
+            val events = getIcsEvents()
+
+            views.removeAllViews(R.id.widget_events)
+            for (event in events) {
+                val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
+                eventView.setTextViewText(R.id.event_title, event)
+                views.addView(R.id.widget_events, eventView)
+            }
+
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+
+            // Qui chiamiamo la funzione per programmare il prossimo aggiornamento
+            PwaWidget().scheduleNextUpdate(context, appWidgetId)
+        }
+    }
 }
