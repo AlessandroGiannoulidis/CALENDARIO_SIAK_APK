@@ -21,13 +21,15 @@ jobs:
 
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: '8.2.1'
 
-    - name: Remove old wrapper and regenerate
+    - name: Remove old wrapper and regenerate with correct version
       run: |
         echo "Removing potentially corrupted wrapper..."
         rm -f gradle/wrapper/gradle-wrapper.jar
-        echo "Regenerating Gradle Wrapper..."
-        gradle wrapper --gradle-version 8.2.1
+        echo "Regenerating Gradle Wrapper with version 8.2.1..."
+        gradle wrapper --gradle-version 8.2.1 --distribution-type bin
         chmod +x ./gradlew
         echo "Wrapper regenerated successfully!"
 
