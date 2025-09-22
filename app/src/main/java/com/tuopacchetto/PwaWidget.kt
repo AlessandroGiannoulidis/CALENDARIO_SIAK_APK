@@ -9,22 +9,38 @@ import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
 import java.net.URL
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 private fun getIcsEvents(): List<String> {
     val url = URL("https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics")
     val connection = url.openConnection()
     connection.connectTimeout = 5000
     connection.readTimeout = 5000
-    val inputStream: InputStream = connection.getInputStream()
+    val inputStream = connection.getInputStream()
     val builder = CalendarBuilder()
     val calendar = builder.build(inputStream)
     val eventsList = mutableListOf<String>()
+
+    // Formato leggibile
+    val inputFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault())
+    val now = Date()
+
     for (component in calendar.components) {
         if (component.name == Component.VEVENT) {
             val event = component as VEvent
             val summary = event.summary.value
-            val start = event.startDate.value // data in formato YYYYMMDD
-            eventsList.add("$start - $summary")
+
+            // Prendi la data di inizio e trasformala
+            val startDateStr = event.startDate.value
+            val startDate = inputFormat.parse(startDateStr)
+
+            // Salta eventi già passati
+            if (startDate != null && startDate.after(now)) {
+                val formattedDate = outputFormat.format(startDate)
+                eventsList.add("$formattedDate - $summary")
+            }
         }
     }
     return eventsList
