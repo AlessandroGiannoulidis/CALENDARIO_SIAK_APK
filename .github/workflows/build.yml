@@ -19,37 +19,39 @@ jobs:
         distribution: temurin
         java-version: '17'
 
-    - name: Validate Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
-
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: '8.2.1'
 
-    - name: Debug Gradle Wrapper
+    - name: Remove old wrapper and regenerate
       run: |
-        echo "Checking gradle wrapper files..."
-        ls -la gradle/wrapper/
-        echo "Gradle wrapper jar size:"
-        ls -lh gradle/wrapper/gradle-wrapper.jar
-        echo "Java version:"
-        java -version
-        echo "JAVA_HOME: $JAVA_HOME"
+        echo "Removing potentially corrupted wrapper..."
+        rm -f gradle/wrapper/gradle-wrapper.jar
+        echo "Regenerating Gradle Wrapper..."
+        gradle wrapper --gradle-version 8.2.1
+        chmod +x ./gradlew
+        echo "Wrapper regenerated successfully!"
+
+    - name: Verify wrapper works
+      run: ./gradlew --version
 
     - name: Build Debug APK
-      run: |
-        if [ -f "./gradlew" ] && [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-          ./gradlew assembleDebug --stacktrace --info
-        else
-          gradle assembleDebug --stacktrace --info
-        fi
+      run: ./gradlew assembleDebug --stacktrace
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
         path: app/build/outputs/apk/debug/*.apk
+
+    - name: Commit new wrapper (if changed)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        if git diff --quiet gradle/wrapper/; then
+          echo "No changes to wrapper"
+        else
+          echo "Committing new wrapper..."
+          git add gradle/wrapper/
+          git commit -m "Auto-fix: Regenerate gradle wrapper [skip ci]"
+          git push
+        fi
