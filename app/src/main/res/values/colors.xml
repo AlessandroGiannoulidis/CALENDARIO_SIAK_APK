@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sfondo del widget -->
+    <color name="widget_background">#00000000</color> <!-- Trasparente -->
+
+    <!-- Colore del testo degli eventi -->
+    <color name="widget_text">#FFFFFFFF</color> <!-- Bianco -->
+</resources>
