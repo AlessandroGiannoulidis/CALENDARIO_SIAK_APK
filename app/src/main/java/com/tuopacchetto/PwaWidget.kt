@@ -87,21 +87,28 @@ class PwaWidget : AppWidgetProvider() {
     }
 
     companion object {
-        fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-            val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
-            val events = getIcsEvents()
+    fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+        // Lanciamo il lavoro in background
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+            val events = getIcsEvents() // scarica in background
 
-            views.removeAllViews(R.id.widget_events)
-            for (event in events) {
-                val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                eventView.setTextViewText(R.id.event_title, event)
-                views.addView(R.id.widget_events, eventView)
+            // Ora aggiorniamo il widget sul main thread
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
+
+                views.removeAllViews(R.id.widget_events)
+                for (event in events) {
+                    val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
+                    eventView.setTextViewText(R.id.event_title, event)
+                    views.addView(R.id.widget_events, eventView)
+                }
+
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+
+                // Pianifica il prossimo aggiornamento
+                PwaWidget().scheduleNextUpdate(context, appWidgetId)
             }
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-
-            // Qui chiamiamo la funzione per programmare il prossimo aggiornamento
-            PwaWidget().scheduleNextUpdate(context, appWidgetId)
         }
     }
 }
+
