@@ -26,10 +26,9 @@ android {
             )
         }
 android {
-    ...
-    packagingOptions {
+    packaging {
         resources {
-            excludes += ['META-INF/INDEX.LIST']
+            excludes += "META-INF/INDEX.LIST"
         }
     }
 }
