@@ -7,6 +7,7 @@
     android:background="@color/widget_background"
     android:padding="8dp">
 
+    <!-- Titolo fisso del widget -->
     <TextView
         android:id="@+id/widget_title"
         android:layout_width="match_parent"
@@ -17,10 +18,12 @@
         android:ellipsize="end"
         android:singleLine="true" />
 
+    <!-- Lista eventi -->
     <ListView
         android:id="@+id/widget_events_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
+
 </LinearLayout>
