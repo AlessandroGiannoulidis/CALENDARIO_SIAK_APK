@@ -25,14 +25,12 @@ android {
                 "proguard-rules.pro"
             )
         }
-android {
+
     packaging {
         resources {
             excludes += "META-INF/INDEX.LIST"
         }
     }
-}
-
     }
 
     buildFeatures {
