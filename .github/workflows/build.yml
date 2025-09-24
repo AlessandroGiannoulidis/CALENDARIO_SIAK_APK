@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
+    - name: Clean project
+      run: ./gradlew clean
+      
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
 
     - name: Set up JDK
       uses: actions/setup-java@v3
