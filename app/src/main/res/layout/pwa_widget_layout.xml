@@ -7,23 +7,19 @@
     android:background="@color/widget_background"
     android:padding="8dp">
 
-    <!-- Titolo fisso del widget -->
-    <TextView
-        android:id="@+id/widget_title"
+    <!-- ScrollView per contenere gli eventi -->
+    <ScrollView
+        android:id="@+id/widget_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Eventi"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:ellipsize="end"
-        android:singleLine="true" />
+        android:scrollbars="none">
 
-    <!-- Lista eventi -->
-    <ListView
-        android:id="@+id/widget_events_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        <LinearLayout
+            android:id="@+id/widget_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
 
 </LinearLayout>
