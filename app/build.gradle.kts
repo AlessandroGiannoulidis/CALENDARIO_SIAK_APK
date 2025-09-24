@@ -27,16 +27,14 @@ android {
         }
     }
 
-    //  Spostato fuori da buildTypes
-   packaging {
+    packaging {
         resources {
-            // già presente per ExtensionModule
+            // scegliamo sempre la prima occorrenza
             pickFirsts.add("META-INF/groovy/org.codehaus.groovy.runtime.ExtensionModule")
-
-            // aggiungi anche l'INDEX.LIST
             pickFirsts.add("META-INF/INDEX.LIST")
+            pickFirsts.add("META-INF/groovy-release-info.properties")
 
-            // opzionale: pulizia rumore
+            // opzionale: ridurre rumore nei META-INF
             excludes.add("META-INF/*.kotlin_module")
             excludes.add("META-INF/LICENSE*")
             excludes.add("META-INF/NOTICE*")
