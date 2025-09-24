@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tuopacchetto"
-        minSdk = 26  // Cambiato da 23 a 26
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -25,12 +25,13 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
 
+    //  Spostato fuori da buildTypes
     packaging {
         resources {
             excludes += "META-INF/INDEX.LIST"
         }
-    }
     }
 
     buildFeatures {
@@ -49,6 +50,7 @@ android {
 
     namespace = "com.tuopacchetto"
 }
+
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
