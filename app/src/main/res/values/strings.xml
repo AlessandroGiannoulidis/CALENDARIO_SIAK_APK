@@ -21,4 +21,5 @@
     <string name="widget_updated_footer">🔄 Aggiornato: %s</string>
     <string name="event_no_title">Nessun titolo</string>
     <string name="unknown_error">Errore sconosciuto</string>
+    <string name="instructions_text">Per aggiungere il widget, tieni premuto sulla schermata principale, scegli “Widget”, poi cerca “Widget Calendario SIAK”.</string>
 </resources>
