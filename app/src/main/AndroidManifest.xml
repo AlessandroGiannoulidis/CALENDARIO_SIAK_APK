@@ -1,17 +1,39 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tuopacchetto">
-<uses-permission android:name="android.permission.INTERNET" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
     <application
         android:allowBackup="true"
-        android:label="WidgetCalendario"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:label="Widget Calendario SIAK"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:exported="true"
+        tools:targetApi="31">
 
-        <!-- Receiver del widget -->
-        <receiver android:name=".PwaWidget" android:exported="true">
+        <!-- Activity principale per compatibilità -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Receiver del widget con configurazione migliorata -->
+        <receiver 
+            android:name=".PwaWidget" 
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
