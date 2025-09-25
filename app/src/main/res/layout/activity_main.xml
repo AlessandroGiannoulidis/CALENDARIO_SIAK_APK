@@ -49,7 +49,7 @@
         android:textAlignment="center"
         android:lineSpacingExtra="4dp" />
 
-    <!-- AGGIUNTO IL BOTTONE SETTINGS -->
+    <!-- Bottone Settings aggiunto -->
     <Button
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
