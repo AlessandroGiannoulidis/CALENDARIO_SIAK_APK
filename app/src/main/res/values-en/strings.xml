@@ -20,4 +20,5 @@
     <string name="widget_updated_footer">🔄 Updated: %s</string>
     <string name="event_no_title">No title</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="instructions_text">To add the widget, long press on the home screen, choose “Widgets”, then look for “SIAK Calendar Widget”.</string>
 </resources>
