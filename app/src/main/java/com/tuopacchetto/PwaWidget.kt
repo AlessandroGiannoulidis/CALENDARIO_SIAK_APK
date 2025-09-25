@@ -2,27 +2,23 @@ package com.tuopacchetto
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
+import it.alessandrogiannoulidis.calendariosiak.utils.ToastUtils
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
+import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.util.*
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Intent
-import android.util.Log
-import java.util.concurrent.Executors
+import java.util.Locale
 import android.os.Handler
 import android.os.Looper
 
-data class WidgetEvent(val text: String, val startDate: Date)
-
 class PwaWidget : AppWidgetProvider() {
-
-    private val executor = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onEnabled(context: Context) {
@@ -30,12 +26,7 @@ class PwaWidget : AppWidgetProvider() {
         Log.d("PwaWidget", "Widget abilitato")
     }
 
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        Log.d("PwaWidget", "onUpdate chiamato per ${appWidgetIds.size} widget")
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -44,7 +35,6 @@ class PwaWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.d("PwaWidget", "onReceive: ${intent.action}")
-        
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE == intent.action) {
             val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
             if (widgetIds != null) {
@@ -53,36 +43,54 @@ class PwaWidget : AppWidgetProvider() {
         }
     }
 
-    private fun getIcsEvents(context: Context): List<WidgetEvent> {
+    private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+        val views = RemoteViews(context.packageName, R.layout.widget_layout)
+        views.setTextViewText(R.id.widgetTitle, context.getString(R.string.widget_loading))
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+
+        Thread {
+            val events = fetchCalendarEvents(context)
+            mainHandler.post {
+                if (events.isEmpty()) {
+                    views.setTextViewText(R.id.widgetTitle, context.getString(R.string.widget_no_events))
+                } else {
+                    val header = context.getString(R.string.widget_header_events, events.size)
+                    views.setTextViewText(R.id.widgetTitle, header)
+                    val content = events.joinToString("\n") { it }
+                    views.setTextViewText(R.id.widgetContent, content)
+                }
+                val updated = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(System.currentTimeMillis())
+                views.setTextViewText(R.id.widgetFooter, context.getString(R.string.widget_updated_footer, updated))
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        }.start()
+    }
+
+    private fun fetchCalendarEvents(context: Context): List<String> {
         return try {
             Log.d("PwaWidget", "Iniziando download ICS...")
             val url = URL("https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics")
-            val connection = url.openConnection() as java.net.HttpURLConnection
-            
+            val connection = url.openConnection() as HttpURLConnection
             // Configurazione connessione per maggiore robustezza
             connection.connectTimeout = 10000
             connection.readTimeout = 15000
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36")
             connection.setRequestProperty("Accept", "text/calendar,*/*")
             connection.setRequestProperty("Cache-Control", "no-cache")
-            
+
             // Verifica response code
             val responseCode = connection.responseCode
             Log.d("PwaWidget", "Connessione aperta, response code: $responseCode")
-            
-            if (responseCode != java.net.HttpURLConnection.HTTP_OK) {
+            if (responseCode != HttpURLConnection.HTTP_OK) {
                 Log.w("PwaWidget", "HTTP response non OK: $responseCode")
                 return emptyList()
             }
-            
-            val inputStream = connection.getInputStream()
+
+            val inputStream = connection.inputStream
             val builder = CalendarBuilder()
             val calendar = builder.build(inputStream)
             inputStream.close()
             connection.disconnect()
-            
-            val eventsList = mutableListOf<WidgetEvent>()
-
             Log.d("PwaWidget", "Calendario caricato, componenti: ${calendar.components.size}")
 
             val inputFormats = arrayOf(
@@ -92,182 +100,41 @@ class PwaWidget : AppWidgetProvider() {
             )
             val outputFormat = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault())
 
+            val eventsList = mutableListOf<String>()
             for (component in calendar.components) {
                 if (component.name == Component.VEVENT) {
                     val event = component as VEvent
                     val summary = event.summary?.value ?: context.getString(R.string.event_no_title)
-                    val startDateStr = event.startDate?.value ?: continue
-                    
-                    Log.d("PwaWidget", "Evento trovato: $summary, data: $startDateStr")
-                    
-                    var startDate: Date? = null
-                    for (format in inputFormats) {
-                        try {
-                            startDate = format.parse(startDateStr)
-                            break
-                        } catch (e: Exception) {
-                            continue
+                    val start = event.startDate?.value
+                    var formattedStart = ""
+                    if (start != null) {
+                        for (fmt in inputFormats) {
+                            try {
+                                val parsed = fmt.parse(start)
+                                if (parsed != null) {
+                                    formattedStart = outputFormat.format(parsed)
+                                    break
+                                }
+                            } catch (_: Exception) {}
                         }
                     }
-                    
-                    if (startDate == null) {
-                        Log.w("PwaWidget", "Impossibile parsare la data: $startDateStr")
-                        continue
-                    }
-
-                    val formattedDate = outputFormat.format(startDate)
-                    eventsList.add(WidgetEvent("$formattedDate - $summary", startDate))
+                    eventsList.add("$formattedStart - $summary")
                 }
             }
-            
-            Log.d("PwaWidget", "Eventi trovati: ${eventsList.size}")
-            // Ordina gli eventi per data e filtra solo quelli futuri o di oggi
-            val now = Calendar.getInstance().apply { 
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.time
-            
-            eventsList.filter { it.startDate >= now }
-                      .sortedBy { it.startDate }
-                      .take(10) // Limita a 10 eventi
-        } catch (e: java.net.SocketTimeoutException) {
-            Log.e("PwaWidget", "Timeout nella connessione al calendario", e)
-            emptyList()
-        } catch (e: java.net.UnknownHostException) {
-            Log.e("PwaWidget", "Host non raggiungibile", e)
-            emptyList()
-        } catch (e: java.io.IOException) {
-            Log.e("PwaWidget", "Errore di rete nel caricamento calendario", e)
-            emptyList()
-        } catch (e: Exception) {
-            Log.e("PwaWidget", "Errore generico nel caricamento eventi", e)
-            emptyList()
-        }
-    }
-
-    private fun scheduleNextUpdate(context: Context, appWidgetId: Int) {
-        try {
-            val intent = Intent(context, PwaWidget::class.java).apply {
-                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(appWidgetId))
-            }
-
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                appWidgetId,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intervalMillis = 1000 * 60 * 60 * 1 // 1 ora
-            val nextUpdate = System.currentTimeMillis() + intervalMillis
-
-            try {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    nextUpdate,
-                    pendingIntent
-                )
-                Log.d("PwaWidget", "Prossimo aggiornamento schedulato in 1 ora")
-            } catch (e: SecurityException) {
-                Log.w("PwaWidget", "Fallback per allarmi esatti")
-                alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate, pendingIntent)
-            }
-        } catch (e: Exception) {
-            Log.e("PwaWidget", "Errore nello scheduling", e)
-        }
-    }
-
-    private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-        Log.d("PwaWidget", "Aggiornamento widget $appWidgetId")
-        
-        // Mostra subito lo stato di caricamento
-        val views = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
-        views.removeAllViews(R.id.widget_events)
-        
-        val loadingView = RemoteViews(context.packageName, R.layout.widget_event_item)
-        loadingView.setTextViewText(R.id.event_title, context.getString(R.string.widget_loading))
-        views.addView(R.id.widget_events, loadingView)
-        appWidgetManager.updateAppWidget(appWidgetId, views)
-
-        // Esegui il download in background
-        executor.execute {
-            Log.d("PwaWidget", "Inizio download dati...")
-            val events = getIcsEvents(context)
-            Log.d("PwaWidget", "Download completato, eventi: ${events.size}")
-
-            // Aggiorna il widget sul thread principale
-            mainHandler.post {
-                updateWidgetWithEvents(context, appWidgetManager, appWidgetId, events)
-            }
-        }
-    }
-
-    private fun updateWidgetWithEvents(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, events: List<WidgetEvent>) {
-        try {
-            val updatedViews = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
-            updatedViews.removeAllViews(R.id.widget_events)
-            
-            if (events.isEmpty()) {
-                val noEventsView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                noEventsView.setTextViewText(R.id.event_title, context.getString(R.string.widget_no_events))
-                updatedViews.addView(R.id.widget_events, noEventsView)
-                
-                // Aggiungi info di debug
-                val debugView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                debugView.setTextViewText(R.id.event_title, context.getString(R.string.widget_last_sync, SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())))
-                updatedViews.addView(R.id.widget_events, debugView)
+            if (eventsList.isEmpty()) {
+                listOf(context.getString(R.string.widget_no_events))
             } else {
-                // Aggiungi header con info
-                val headerView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                headerView.setTextViewText(R.id.event_title, context.getString(R.string.widget_header_events, events.size))
-                updatedViews.addView(R.id.widget_events, headerView)
-                
-                val currentTime = Date()
-                for (event in events) {
-                    val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                    eventView.setTextViewText(R.id.event_title, event.text)
-
-                    // Se l'evento è già passato, rendilo opacizzato
-                    if (event.startDate.before(currentTime)) {
-                        eventView.setInt(R.id.event_title, "setAlpha", 128)
-                    } else {
-                        eventView.setInt(R.id.event_title, "setAlpha", 255)
-                    }
-
-                    updatedViews.addView(R.id.widget_events, eventView)
-                }
-                
-                // Aggiungi footer con timestamp
-                val footerView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                footerView.setTextViewText(R.id.event_title, context.getString(R.string.widget_updated_footer, SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(Date())))
-                updatedViews.addView(R.id.widget_events, footerView)
+                eventsList
             }
-
-            appWidgetManager.updateAppWidget(appWidgetId, updatedViews)
-            Log.d("PwaWidget", "Widget $appWidgetId aggiornato con successo")
-
-            // Pianifica il prossimo aggiornamento
-            scheduleNextUpdate(context, appWidgetId)
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.e("PwaWidget", "Timeout di rete", e)
+            listOf(context.getString(R.string.widget_network_timeout))
+        } catch (e: java.net.UnknownHostException) {
+            Log.e("PwaWidget", "Server non raggiungibile", e)
+            listOf(context.getString(R.string.widget_network_unreachable))
         } catch (e: Exception) {
-            Log.e("PwaWidget", "Errore nell'aggiornamento UI", e)
-            showErrorWidget(context, appWidgetManager, appWidgetId, context.getString(R.string.unknown_error))
-        }
-    }
-
-    private fun showErrorWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, errorMessage: String) {
-        try {
-            val errorViews = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
-            errorViews.removeAllViews(R.id.widget_events)
-            val errorView = RemoteViews(context.packageName, R.layout.widget_event_item)
-            errorView.setTextViewText(R.id.event_title, context.getString(R.string.widget_error, errorMessage))
-            errorViews.addView(R.id.widget_events, errorView)
-            appWidgetManager.updateAppWidget(appWidgetId, errorViews)
-        } catch (e: Exception) {
-            Log.e("PwaWidget", "Errore critico nella visualizzazione errore", e)
+            Log.e("PwaWidget", "Errore generico", e)
+            listOf(context.getString(R.string.widget_network_error))
         }
     }
 }
