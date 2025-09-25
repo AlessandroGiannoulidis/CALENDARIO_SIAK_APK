@@ -8,7 +8,6 @@ object ToastUtils {
 
     fun showToast(context: Context, message: String) {
         currentToast?.cancel()
-        currentToast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
-        currentToast?.show()
+        currentToast = ToastUtils.showToast(context, context.getString(R.string.nome_stringa))
     }
 }
