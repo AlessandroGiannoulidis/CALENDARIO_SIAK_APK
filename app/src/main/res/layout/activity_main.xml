@@ -49,4 +49,13 @@
         android:textAlignment="center"
         android:lineSpacingExtra="4dp" />
 
+    <!-- AGGIUNTO IL BOTTONE SETTINGS -->
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp" />
+
 </LinearLayout>
