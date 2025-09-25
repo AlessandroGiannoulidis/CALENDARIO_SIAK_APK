@@ -66,11 +66,6 @@ class MainActivity : AppCompatActivity() {
     // Metodo unico per mostrare Toast senza flood
     private fun showSingleToast(message: String, isLong: Boolean = false) {
         lastToast?.cancel()
-        lastToast = Toast.makeText(
-            this,
-            message,
-            if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-        )
-        lastToast?.show()
+        ToastUtils.showToast(context, context.getString(R.string.nome_stringa))
     }
 }
