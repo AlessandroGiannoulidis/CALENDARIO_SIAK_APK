@@ -8,9 +8,11 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+
+    // Toast globale per tutta l'activity, non floodabile
+    private var lastToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         refreshButton.setOnClickListener {
             refreshAllWidgets()
-            Toast.makeText(this, "Widget aggiornati", Toast.LENGTH_SHORT).show()
+            showSingleToast("Widget aggiornati")
         }
 
         addWidgetButton.setOnClickListener {
@@ -38,27 +40,37 @@ class MainActivity : AppCompatActivity() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val componentName = ComponentName(this, PwaWidget::class.java)
         val widgetIds = appWidgetManager.getAppWidgetIds(componentName)
-        
+
         val intent = Intent(this, PwaWidget::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
         }
-        
+
         sendBroadcast(intent)
     }
 
     private fun requestPinWidget() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val componentName = ComponentName(this, PwaWidget::class.java)
-        
+
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             appWidgetManager.requestPinAppWidget(componentName, null, null)
         } else {
-            Toast.makeText(
-                this, 
-                "Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova 'Widget Calendario SIAK'", 
-                Toast.LENGTH_LONG
-            ).show()
+            showSingleToast(
+                "Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova 'Widget Calendario SIAK'",
+                isLong = true
+            )
         }
+    }
+
+    // Metodo unico per mostrare Toast senza flood
+    private fun showSingleToast(message: String, isLong: Boolean = false) {
+        lastToast?.cancel()
+        lastToast = Toast.makeText(
+            this,
+            message,
+            if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+        )
+        lastToast?.show()
     }
 }
