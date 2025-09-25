@@ -149,6 +149,9 @@ class PwaWidget : AppWidgetProvider() {
     }
 
     private fun createEventView(context: Context, event: CalendarEvent): RemoteViews {
+        val preferences = context.getSharedPreferences("widget_settings", Context.MODE_PRIVATE)
+        val isCompact = preferences.getBoolean("compact_mode", false)
+        
         val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
         
         // Set event title
@@ -168,33 +171,45 @@ class PwaWidget : AppWidgetProvider() {
             eventView.setViewVisibility(R.id.eventSeparator, RemoteViews.GONE)
         }
         
+        // Apply compact mode styling
+        if (isCompact) {
+            // Reduce text sizes for compact mode
+            eventView.setTextViewTextSize(R.id.eventTitle, android.util.TypedValue.COMPLEX_UNIT_SP, 12f)
+            eventView.setTextViewTextSize(R.id.eventTime, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+            if (!event.location.isNullOrEmpty()) {
+                eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+            }
+            // Make badge smaller in compact mode  
+            eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 7f)
+        }
+        
         // Set status border and badge based on event status
         val status = event.getStatusType()
         when (status) {
             EventStatus.TODAY -> {
-                eventView.setInt(R.id.statusBorder, "setBackgroundColor", context.getColor(R.color.event_card_border_today))
+                eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_today)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_today))
-                eventView.setInt(R.id.statusBadge, "setBackgroundColor", context.getColor(R.color.badge_today))
+                eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_background)
                 eventView.setViewVisibility(R.id.statusBadge, RemoteViews.VISIBLE)
                 // Full opacity for today events
-                eventView.setInt(R.id.eventTitle, "setTextColor", context.getColor(R.color.widget_text_primary))
-                eventView.setInt(R.id.eventTime, "setTextColor", context.getColor(R.color.widget_text_secondary))
+                eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
+                eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
             }
             EventStatus.PAST -> {
-                eventView.setInt(R.id.statusBorder, "setBackgroundColor", context.getColor(R.color.event_card_border_past))
+                eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_past)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_past))
-                eventView.setInt(R.id.statusBadge, "setBackgroundColor", context.getColor(R.color.badge_past))
+                eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_past_background)
                 eventView.setViewVisibility(R.id.statusBadge, RemoteViews.VISIBLE)
                 // Reduced opacity for past events
-                eventView.setInt(R.id.eventTitle, "setTextColor", context.getColor(R.color.widget_text_past))
-                eventView.setInt(R.id.eventTime, "setTextColor", context.getColor(R.color.widget_text_past))
+                eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_past, null))
+                eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_past, null))
             }
             EventStatus.UPCOMING -> {
-                eventView.setInt(R.id.statusBorder, "setBackgroundColor", context.getColor(R.color.event_card_border_upcoming))
+                eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_upcoming)
                 eventView.setViewVisibility(R.id.statusBadge, RemoteViews.GONE)
                 // Full opacity for upcoming events
-                eventView.setInt(R.id.eventTitle, "setTextColor", context.getColor(R.color.widget_text_primary))
-                eventView.setInt(R.id.eventTime, "setTextColor", context.getColor(R.color.widget_text_secondary))
+                eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
+                eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
             }
         }
         

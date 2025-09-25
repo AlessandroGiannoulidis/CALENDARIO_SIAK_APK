@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_xlarge"
+    android:background="@color/widget_background_solid">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Impostazioni Widget"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/widget_text_primary"
+        android:layout_marginBottom="@dimen/spacing_xlarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="@dimen/spacing_large">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Modalità compatta"
+            android:textColor="@color/widget_text_primary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/compactModeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="La modalità compatta riduce padding e dimensioni del testo per adattarsi meglio ai widget più piccoli."
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/spacing_xlarge" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Salva Impostazioni"
+        android:background="@drawable/button_refresh_background"
+        android:textColor="@color/button_text"
+        android:layout_marginTop="@dimen/spacing_xlarge" />
+
+</LinearLayout>

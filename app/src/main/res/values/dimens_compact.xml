@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget compact dimensions -->
+    <dimen name="widget_padding_compact">8dp</dimen>
+    <dimen name="widget_corner_radius_compact">8dp</dimen>
+    
+    <!-- Event card compact dimensions -->
+    <dimen name="event_card_height_compact">40dp</dimen>
+    <dimen name="event_card_padding_compact">8dp</dimen>
+    <dimen name="event_card_margin_compact">2dp</dimen>
+    
+    <!-- Compact text sizes -->
+    <dimen name="widget_title_text_size_compact">14sp</dimen>
+    <dimen name="event_title_text_size_compact">12sp</dimen>
+    <dimen name="event_subtitle_text_size_compact">10sp</dimen>
+    <dimen name="widget_footer_text_size_compact">8sp</dimen>
+    <dimen name="badge_text_size_compact">7sp</dimen>
+    <dimen name="button_text_size_compact">10sp</dimen>
+    
+    <!-- Compact button dimensions -->
+    <dimen name="button_size_compact">28dp</dimen>
+    <dimen name="button_corner_radius_compact">14dp</dimen>
+    <dimen name="button_margin_compact">4dp</dimen>
+    
+    <!-- Compact spacing -->
+    <dimen name="spacing_tiny_compact">1dp</dimen>
+    <dimen name="spacing_small_compact">2dp</dimen>
+    <dimen name="spacing_medium_compact">4dp</dimen>
+    <dimen name="spacing_large_compact">6dp</dimen>
+    <dimen name="spacing_xlarge_compact">8dp</dimen>
+</resources>
