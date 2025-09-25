@@ -31,8 +31,8 @@
     <string name="badge_past">PASSATO</string>
     <string name="badge_upcoming">PROSSIMO</string>
     
-    <!-- Button labels -->
-    <string name="button_reset">RESET</string>
+    <!-- Button labels - Modern design -->
+    <string name="button_reset">R</string>
     <string name="button_refresh">⟳</string>
     
     <!-- Event details -->

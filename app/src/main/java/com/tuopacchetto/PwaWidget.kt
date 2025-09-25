@@ -171,16 +171,16 @@ class PwaWidget : AppWidgetProvider() {
             eventView.setViewVisibility(R.id.eventSeparator, 8) // GONE
         }
 
-        // Apply compact mode styling
+        // Apply compact mode styling - Use dimension resources
         if (isCompact) {
-            // Reduce text sizes for compact mode
-            eventView.setTextViewTextSize(R.id.eventTitle, android.util.TypedValue.COMPLEX_UNIT_SP, 12f)
-            eventView.setTextViewTextSize(R.id.eventTime, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+            // Reduce text sizes for compact mode using dimension resources
+            eventView.setTextViewTextSize(R.id.eventTitle, android.util.TypedValue.COMPLEX_UNIT_SP, 13f) // Updated for new compact size
+            eventView.setTextViewTextSize(R.id.eventTime, android.util.TypedValue.COMPLEX_UNIT_SP, 11f)
             if (!event.location.isNullOrEmpty()) {
-                eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+                eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 11f)
             }
             // Make badge smaller in compact mode
-            eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 7f)
+            eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 8f) // Updated for new compact size
         }
 
         // Set status border and badge based on event status
@@ -191,25 +191,34 @@ class PwaWidget : AppWidgetProvider() {
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_today))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_background)
                 eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
-                // Full opacity for today events
+                // Full opacity for today events - modern colors
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_secondary, null))
+                }
             }
             EventStatus.PAST -> {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_past)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_past))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_past_background)
                 eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
-                // Reduced opacity for past events
+                // Reduced opacity for past events - modern styling
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_past, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_past, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_past, null))
+                }
             }
             EventStatus.UPCOMING -> {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_upcoming)
                 eventView.setViewVisibility(R.id.statusBadge, 8) // GONE
-                // Full opacity for upcoming events
+                // Full opacity for upcoming events - modern colors
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_secondary, null))
+                }
             }
         }
 

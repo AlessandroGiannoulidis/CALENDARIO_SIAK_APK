@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Widget Modern Dark Theme -->
-    <color name="widget_background">#E6000000</color> <!-- Dark transparent -->
-    <color name="widget_background_solid">#1C1C1E</color> <!-- Dark solid -->
+    <!-- Modern SIAK Widget Color Palette - HTML Faithful -->
+    
+    <!-- Main Background Colors -->
+    <color name="widget_background">#E61E1E1E</color> <!-- Dark transparent background #1e1e1e with transparency -->
+    <color name="widget_background_solid">#1E1E1E</color> <!-- Dark solid background -->
     
     <!-- Event Card Colors -->
-    <color name="event_card_background">#3A1C1C1E</color> <!-- Semi-transparent dark -->
-    <color name="event_card_border_today">#FF3B82F6</color> <!-- Blue for today -->
-    <color name="event_card_border_upcoming">#FF10B981</color> <!-- Green for upcoming -->
-    <color name="event_card_border_past">#FF6B7280</color> <!-- Gray for past -->
+    <color name="event_card_background">#4D1E1E1E</color> <!-- Semi-transparent dark cards -->
+    <color name="event_card_border_today">#FF4A9EFF</color> <!-- Golden/Blue accent for today -->
+    <color name="event_card_border_upcoming">#FF4A9EFF</color> <!-- Primary accent for upcoming -->
+    <color name="event_card_border_past">#FF6B7280</color> <!-- Gray for past events -->
     
-    <!-- Text Colors -->
-    <color name="widget_text_primary">#FFFFFFFF</color> <!-- White -->
-    <color name="widget_text_secondary">#FFE5E7EB</color> <!-- Light gray -->
-    <color name="widget_text_muted">#FF9CA3AF</color> <!-- Muted gray -->
-    <color name="widget_text_past">#66FFFFFF</color> <!-- White with opacity for past events -->
+    <!-- Text Colors - HTML Faithful -->
+    <color name="widget_text_primary">#FFFFFFFF</color> <!-- Pure white #fff -->
+    <color name="widget_text_secondary">#FFB0B0B0</color> <!-- Light gray #b0b0b0 -->
+    <color name="widget_text_muted">#FF808080</color> <!-- Medium gray for subtle text -->
+    <color name="widget_text_past">#66FFFFFF</color> <!-- White with reduced opacity for past events -->
     
-    <!-- Badge Colors -->
-    <color name="badge_today">#FF3B82F6</color> <!-- Blue -->
-    <color name="badge_past">#FF6B7280</color> <!-- Gray -->
-    <color name="badge_text">#FFFFFFFF</color>
+    <!-- Badge Colors - Pill Style -->
+    <color name="badge_today">#FF4A9EFF</color> <!-- Primary accent for today badge -->
+    <color name="badge_today_background">#FF4A9EFF</color> <!-- Golden/blue background -->
+    <color name="badge_past">#FF6B7280</color> <!-- Gray for past events -->
+    <color name="badge_past_background">#FF6B7280</color> <!-- Gray background for past -->
+    <color name="badge_text">#FFFFFFFF</color> <!-- White text on badges -->
     
-    <!-- Button Colors -->
-    <color name="button_reset">#FFEF4444</color> <!-- Red -->
-    <color name="button_refresh">#FF3B82F6</color> <!-- Blue -->
-    <color name="button_text">#FFFFFFFF</color>
-    <color name="button_background">#3A000000</color> <!-- Semi-transparent -->
+    <!-- Button Colors - HTML Faithful -->
+    <color name="button_reset">#FFDC3545</color> <!-- Red reset button -->
+    <color name="button_refresh">#FF4A9EFF</color> <!-- Primary accent blue refresh -->
+    <color name="button_text">#FFFFFFFF</color> <!-- White button text -->
+    <color name="button_background_reset">#FFDC3545</color> <!-- Red background -->
+    <color name="button_background_refresh">#FF4A9EFF</color> <!-- Blue background -->
     
-    <!-- Accent Colors -->
-    <color name="accent_primary">#FF3B82F6</color>
-    <color name="accent_secondary">#FF10B981</color>
-    <color name="accent_error">#FFEF4444</color>
+    <!-- Primary Accent Colors - HTML Specification -->
+    <color name="accent_primary">#FF4A9EFF</color> <!-- Primary accent #4a9eff -->
+    <color name="accent_secondary">#FF10B981</color> <!-- Secondary green accent -->
+    <color name="accent_error">#FFDC3545</color> <!-- Error/reset red -->
+    <color name="accent_warning">#FFFFC107</color> <!-- Warning/golden -->
+    
+    <!-- State-specific Colors -->
+    <color name="state_loading">#FF4A9EFF</color> <!-- Loading state accent -->
+    <color name="state_error">#FFDC3545</color> <!-- Error state -->
+    <color name="state_empty">#FF808080</color> <!-- Empty state muted -->
+    
+    <!-- Transparency Variants -->
+    <color name="overlay_light">#33FFFFFF</color> <!-- Light overlay -->
+    <color name="overlay_dark">#33000000</color> <!-- Dark overlay -->
+    <color name="shadow_color">#66000000</color> <!-- Shadow effect -->
 </resources>
