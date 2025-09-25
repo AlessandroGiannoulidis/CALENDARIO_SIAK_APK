@@ -32,6 +32,12 @@ class MainActivity : AppCompatActivity() {
             requestPinWidget()
             ToastUtils.showToast(this, R.string.manual_widget_instruction, isLong = true)
         }
+        
+        // Add settings button (if it exists in the layout)
+        findViewById<Button>(R.id.settingsButton)?.setOnClickListener {
+            val intent = Intent(this, WidgetSettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun refreshAllWidgets() {
