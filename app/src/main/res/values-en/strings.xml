@@ -7,6 +7,9 @@
     <string name="status_main">App installed correctly. Now you can add the widget to your home screen.</string>
     <string name="widgets_updated">Widgets updated</string>
     <string name="add_widget_manually">Add widget manually: long press on home screen > Widgets > Find \'SIAK Calendar Widget\'</string>
+    <string name="refresh_button">Refresh Widget</string>
+    <string name="add_widget_button">Add Widget to Home Screen</string>
+    <string name="instructions">Instructions:\n1. Long press on home screen\n2. Select \'Widgets\'\n3. Search for \'SIAK Calendar Widget\'\n4. Drag it where you want</string>
     
     <!-- Widget strings -->
     <string name="no_event_title">No title</string>

@@ -28,20 +28,20 @@
         android:id="@+id/refreshButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aggiorna Widget"
+        android:text="@string/refresh_button"
         android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/addWidgetButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aggiungi Widget alla Schermata"
+        android:text="@string/add_widget_button"
         android:layout_marginBottom="20dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Istruzioni:\n1. Tieni premuto sulla schermata principale\n2. Seleziona 'Widget'\n3. Cerca 'Widget Calendario SIAK'\n4. Trascinalo dove vuoi"
+        android:text="@string/instructions"
         android:textSize="14sp"
         android:textColor="#888888"
         android:textAlignment="center"

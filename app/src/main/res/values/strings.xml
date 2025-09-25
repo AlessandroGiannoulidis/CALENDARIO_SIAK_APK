@@ -8,6 +8,9 @@
     <string name="status_main">App installata correttamente. Ora puoi aggiungere il widget alla schermata principale.</string>
     <string name="widgets_updated">Widget aggiornati</string>
     <string name="add_widget_manually">Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova \'Widget Calendario SIAK\'</string>
+    <string name="refresh_button">Aggiorna Widget</string>
+    <string name="add_widget_button">Aggiungi Widget alla Schermata</string>
+    <string name="instructions">Istruzioni:\n1. Tieni premuto sulla schermata principale\n2. Seleziona \'Widget\'\n3. Cerca \'Widget Calendario SIAK\'\n4. Trascinalo dove vuoi</string>
     
     <!-- Widget strings -->
     <string name="no_event_title">Nessun titolo</string>
