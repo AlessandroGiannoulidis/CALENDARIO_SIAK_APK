@@ -2,4 +2,23 @@
 <resources>
     <string name="app_name">Widget Calendario SIAK</string>
     <string name="widget_description">Visualizza eventi del calendario SIAK</string>
+    
+    <!-- MainActivity strings -->
+    <string name="title_main">Widget Calendario SIAK</string>
+    <string name="status_main">App installata correttamente. Ora puoi aggiungere il widget alla schermata principale.</string>
+    <string name="widgets_updated">Widget aggiornati</string>
+    <string name="add_widget_manually">Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova \'Widget Calendario SIAK\'</string>
+    
+    <!-- Widget strings -->
+    <string name="no_event_title">Nessun titolo</string>
+    <string name="loading_events">📅 Caricamento eventi…</string>
+    <string name="no_events_found">❌ Nessun evento trovato</string>
+    <string name="last_sync">ℹ️ Ultima sincronizzazione: %1$s</string>
+    <string name="calendar_header">📅 CALENDARIO SIAK (%1$d eventi)</string>
+    <string name="updated_footer">🔄 Aggiornato: %1$s</string>
+    <string name="error_message">❌ Errore: %1$s</string>
+    
+    <!-- Date formats -->
+    <string name="date_format_display">dd/MM HH:mm</string>
+    <string name="time_format">HH:mm</string>
 </resources>

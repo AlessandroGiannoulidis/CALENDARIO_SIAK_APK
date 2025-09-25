@@ -3,16 +3,14 @@ package com.tuopacchetto
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import it.alessandrogiannoulidis.calendariosiak.utils.ToastUtils
 
 class MainActivity : AppCompatActivity() {
-
-    // Toast globale per tutta l'activity, non floodabile
-    private var lastToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +21,12 @@ class MainActivity : AppCompatActivity() {
         val refreshButton = findViewById<Button>(R.id.refreshButton)
         val addWidgetButton = findViewById<Button>(R.id.addWidgetButton)
 
-        titleText.text = "Widget Calendario SIAK"
-        statusText.text = "App installata correttamente. Ora puoi aggiungere il widget alla schermata principale."
+        titleText.text = getString(R.string.title_main)
+        statusText.text = getString(R.string.status_main)
 
         refreshButton.setOnClickListener {
             refreshAllWidgets()
-            showSingleToast("Widget aggiornati")
+            ToastUtils.showToast(this, getString(R.string.widgets_updated))
         }
 
         addWidgetButton.setOnClickListener {
@@ -53,19 +51,22 @@ class MainActivity : AppCompatActivity() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val componentName = ComponentName(this, PwaWidget::class.java)
 
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            appWidgetManager.requestPinAppWidget(componentName, null, null)
-        } else {
-            showSingleToast(
-                "Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova 'Widget Calendario SIAK'",
+        try {
+            if (appWidgetManager.isRequestPinAppWidgetSupported) {
+                appWidgetManager.requestPinAppWidget(componentName, null, null)
+            } else {
+                ToastUtils.showToast(
+                    this,
+                    getString(R.string.add_widget_manually),
+                    isLong = true
+                )
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            ToastUtils.showToast(
+                this,
+                getString(R.string.error_message, e.message ?: "Unknown error"),
                 isLong = true
             )
         }
-    }
-
-    // Metodo unico per mostrare Toast senza flood
-    private fun showSingleToast(message: String, isLong: Boolean = false) {
-        lastToast?.cancel()
-        ToastUtils.showToast(context, context.getString(R.string.nome_stringa))
     }
 }
