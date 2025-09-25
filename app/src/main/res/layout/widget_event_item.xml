@@ -26,6 +26,8 @@
         android:textColor="@color/badge_text"
         android:textSize="@dimen/badge_text_size"
         android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:textAllCaps="true"
         android:paddingHorizontal="@dimen/badge_padding_horizontal"
         android:paddingVertical="@dimen/badge_padding_vertical"
         android:layout_marginEnd="@dimen/event_card_padding"
@@ -52,6 +54,7 @@
             android:textColor="@color/widget_text_primary"
             android:textSize="@dimen/event_title_text_size"
             android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:ellipsize="end"
             android:maxLines="1" />
 
@@ -68,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:text="10:00"
                 android:textColor="@color/widget_text_secondary"
-                android:textSize="@dimen/event_subtitle_text_size" />
+                android:textSize="@dimen/event_subtitle_text_size"
+                android:fontFamily="sans-serif" />
 
             <TextView
                 android:id="@+id/eventSeparator"
@@ -86,6 +90,7 @@
                 android:layout_weight="1"
                 android:textColor="@color/widget_text_secondary"
                 android:textSize="@dimen/event_subtitle_text_size"
+                android:fontFamily="sans-serif"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:visibility="gone" />

@@ -30,6 +30,15 @@ class PwaWidget : AppWidgetProvider() {
         const val ACTION_REFRESH = "com.tuopacchetto.ACTION_REFRESH"
     }
 
+    enum class FetchStatus {
+        SUCCESS, NETWORK_ERROR, TIMEOUT, SERVER_UNREACHABLE
+    }
+
+    data class FetchResult(
+        val status: FetchStatus,
+        val events: List<CalendarEvent> = emptyList()
+    )
+
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         Log.d("PwaWidget", "Widget abilitato")
@@ -77,20 +86,78 @@ class PwaWidget : AppWidgetProvider() {
         // Setup button click listeners
         setupButtonClickListeners(context, views, appWidgetId)
 
-        // Show loading state
-        views.setTextViewText(R.id.widgetFooter, context.getString(R.string.widget_loading))
+        // Show loading state with modern styling
+        showLoadingState(views)
         views.setTextViewText(R.id.eventCount, "...")
-        views.setViewVisibility(R.id.emptyState, 4) // INVISIBLE
-        views.setViewVisibility(R.id.eventsContainer, 0) // VISIBLE
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
         Thread {
-            val events = fetchCalendarEvents(context)
+            val result = fetchCalendarEventsWithStatus(context)
             mainHandler.post {
-                populateWidget(context, appWidgetManager, appWidgetId, views, events)
+                when (result.status) {
+                    FetchStatus.SUCCESS -> populateWidget(context, appWidgetManager, appWidgetId, views, result.events)
+                    FetchStatus.NETWORK_ERROR -> showErrorStateInWidget(context, appWidgetManager, appWidgetId, views, context.getString(R.string.widget_network_error))
+                    FetchStatus.TIMEOUT -> showErrorStateInWidget(context, appWidgetManager, appWidgetId, views, context.getString(R.string.widget_network_timeout))
+                    FetchStatus.SERVER_UNREACHABLE -> showErrorStateInWidget(context, appWidgetManager, appWidgetId, views, context.getString(R.string.widget_network_unreachable))
+                }
             }
         }.start()
+    }
+
+    private fun showLoadingState(views: RemoteViews) {
+        // Hide all other states
+        views.setViewVisibility(R.id.emptyState, 8) // GONE
+        views.setViewVisibility(R.id.errorState, 8) // GONE
+        views.setViewVisibility(R.id.eventsContainer, 8) // GONE
+        // Show loading state
+        views.setViewVisibility(R.id.loadingState, 0) // VISIBLE
+        views.setTextViewText(R.id.widgetFooter, "Caricamento…")
+    }
+
+    private fun showEmptyState(views: RemoteViews) {
+        // Hide all other states
+        views.setViewVisibility(R.id.loadingState, 8) // GONE
+        views.setViewVisibility(R.id.errorState, 8) // GONE
+        views.setViewVisibility(R.id.eventsContainer, 8) // GONE
+        // Show empty state
+        views.setViewVisibility(R.id.emptyState, 0) // VISIBLE
+    }
+
+    private fun showErrorState(views: RemoteViews, errorMessage: String) {
+        // Hide all other states
+        views.setViewVisibility(R.id.loadingState, 8) // GONE
+        views.setViewVisibility(R.id.emptyState, 8) // GONE
+        views.setViewVisibility(R.id.eventsContainer, 8) // GONE
+        // Show error state
+        views.setViewVisibility(R.id.errorState, 0) // VISIBLE
+        views.setTextViewText(R.id.errorStateText, errorMessage)
+    }
+
+    private fun showEventsState(views: RemoteViews) {
+        // Hide all other states
+        views.setViewVisibility(R.id.loadingState, 8) // GONE
+        views.setViewVisibility(R.id.emptyState, 8) // GONE
+        views.setViewVisibility(R.id.errorState, 8) // GONE
+        // Show events
+        views.setViewVisibility(R.id.eventsContainer, 0) // VISIBLE
+    }
+
+    private fun showErrorStateInWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        views: RemoteViews,
+        errorMessage: String
+    ) {
+        showErrorState(views, errorMessage)
+        views.setTextViewText(R.id.eventCount, "Error")
+        
+        // Update footer with current time
+        val updated = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(System.currentTimeMillis())
+        views.setTextViewText(R.id.widgetFooter, context.getString(R.string.widget_updated_footer, updated))
+        
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     private fun setupButtonClickListeners(context: Context, views: RemoteViews, appWidgetId: Int) {
@@ -124,14 +191,12 @@ class PwaWidget : AppWidgetProvider() {
         views.removeAllViews(R.id.eventsContainer)
 
         if (events.isEmpty()) {
-            // Show empty state
-            views.setViewVisibility(R.id.emptyState, 0) // VISIBLE
-            views.setViewVisibility(R.id.eventsContainer, 4) // INVISIBLE
+            // Show empty state using modern state management
+            showEmptyState(views)
             views.setTextViewText(R.id.eventCount, "0 eventi")
         } else {
-            // Hide empty state and populate events
-            views.setViewVisibility(R.id.emptyState, 4) // INVISIBLE
-            views.setViewVisibility(R.id.eventsContainer, 0) // VISIBLE
+            // Show events using modern state management
+            showEventsState(views)
             views.setTextViewText(R.id.eventCount, "${events.size} eventi")
 
             // Add each event as a separate RemoteViews
@@ -171,16 +236,16 @@ class PwaWidget : AppWidgetProvider() {
             eventView.setViewVisibility(R.id.eventSeparator, 8) // GONE
         }
 
-        // Apply compact mode styling
+        // Apply compact mode styling - Use dimension resources
         if (isCompact) {
-            // Reduce text sizes for compact mode
-            eventView.setTextViewTextSize(R.id.eventTitle, android.util.TypedValue.COMPLEX_UNIT_SP, 12f)
-            eventView.setTextViewTextSize(R.id.eventTime, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+            // Reduce text sizes for compact mode using dimension resources
+            eventView.setTextViewTextSize(R.id.eventTitle, android.util.TypedValue.COMPLEX_UNIT_SP, 13f) // Updated for new compact size
+            eventView.setTextViewTextSize(R.id.eventTime, android.util.TypedValue.COMPLEX_UNIT_SP, 11f)
             if (!event.location.isNullOrEmpty()) {
-                eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
+                eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 11f)
             }
             // Make badge smaller in compact mode
-            eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 7f)
+            eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 8f) // Updated for new compact size
         }
 
         // Set status border and badge based on event status
@@ -191,29 +256,119 @@ class PwaWidget : AppWidgetProvider() {
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_today))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_background)
                 eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
-                // Full opacity for today events
+                // Full opacity for today events - modern colors
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_secondary, null))
+                }
             }
             EventStatus.PAST -> {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_past)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_past))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_past_background)
                 eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
-                // Reduced opacity for past events
+                // Reduced opacity for past events - modern styling
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_past, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_past, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_past, null))
+                }
             }
             EventStatus.UPCOMING -> {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_upcoming)
                 eventView.setViewVisibility(R.id.statusBadge, 8) // GONE
-                // Full opacity for upcoming events
+                // Full opacity for upcoming events - modern colors
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
+                if (!event.location.isNullOrEmpty()) {
+                    eventView.setTextColor(R.id.eventLocation, context.resources.getColor(R.color.widget_text_secondary, null))
+                }
             }
         }
 
         return eventView
+    }
+
+    private fun fetchCalendarEventsWithStatus(context: Context): FetchResult {
+        return try {
+            Log.d("PwaWidget", "Iniziando download ICS...")
+            val url = URL("https://outlook.office365.com/owa/calendar/c05135b8a3904b118721bb88f16e180c@siaksistemi.com/15296e171a174bd69fe09a8ee790bec09509691657482763908/calendar.ics")
+            val connection = url.openConnection() as HttpURLConnection
+            // Configurazione connessione per maggiore robustezza
+            connection.connectTimeout = 10000
+            connection.readTimeout = 15000
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36")
+            connection.setRequestProperty("Accept", "text/calendar,*/*")
+            connection.setRequestProperty("Cache-Control", "no-cache")
+
+            // Verifica response code
+            val responseCode = connection.responseCode
+            Log.d("PwaWidget", "Connessione aperta, response code: $responseCode")
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                Log.w("PwaWidget", "HTTP response non OK: $responseCode")
+                return FetchResult(FetchStatus.NETWORK_ERROR)
+            }
+
+            val events = parseICalEvents(connection)
+            connection.disconnect()
+            Log.d("PwaWidget", "Eventi caricati: ${events.size}")
+            
+            FetchResult(FetchStatus.SUCCESS, events)
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.e("PwaWidget", "Timeout di rete", e)
+            FetchResult(FetchStatus.TIMEOUT)
+        } catch (e: java.net.UnknownHostException) {
+            Log.e("PwaWidget", "Server non raggiungibile", e)
+            FetchResult(FetchStatus.SERVER_UNREACHABLE)
+        } catch (e: Exception) {
+            Log.e("PwaWidget", "Errore generico", e)
+            FetchResult(FetchStatus.NETWORK_ERROR)
+        }
+    }
+
+    private fun parseICalEvents(connection: HttpURLConnection): List<CalendarEvent> {
+        val inputStream = connection.inputStream
+        val builder = CalendarBuilder()
+        val calendar = builder.build(inputStream)
+        inputStream.close()
+        Log.d("PwaWidget", "Calendario caricato, componenti: ${calendar.components.size}")
+
+        val inputFormats = arrayOf(
+            SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.getDefault()),
+            SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.getDefault()),
+            SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        )
+
+        val eventsList = mutableListOf<CalendarEvent>()
+        for (component in calendar.components) {
+            if (component.name == Component.VEVENT) {
+                val event = component as VEvent
+                val summary = event.summary?.value ?: "Nessun titolo"
+                val location = event.location?.value
+
+                val startTimeStr = event.startDate?.value ?: continue
+                var startTime: Date? = null
+                for (format in inputFormats) {
+                    try {
+                        startTime = format.parse(startTimeStr)
+                        break
+                    } catch (e: Exception) {
+                        // Prova il formato successivo
+                    }
+                }
+
+                if (startTime != null) {
+                    eventsList.add(CalendarEvent(
+                        title = summary,
+                        startTime = startTime,
+                        location = location
+                    ))
+                }
+            }
+        }
+
+        return eventsList.sortedBy { it.startTime }.take(20) // Limit and sort events
     }
 
     private fun fetchCalendarEvents(context: Context): List<CalendarEvent> {
@@ -281,14 +436,9 @@ class PwaWidget : AppWidgetProvider() {
                 }
             }
 
-            // Sort events by start time
+            // Sort events by start time and return limited results
             eventsList.sortBy { it.startTime }
-
-            if (eventsList.isEmpty()) {
-                emptyList()
-            } else {
-                eventsList
-            }
+            eventsList.take(20) // Limit events for widget performance
         } catch (e: java.net.SocketTimeoutException) {
             Log.e("PwaWidget", "Timeout di rete", e)
             emptyList()

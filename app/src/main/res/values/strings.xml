@@ -8,17 +8,17 @@
     <string name="add_widget_button_text">Aggiungi Widget alla Schermata</string>
     <string name="widget_updated">Widget aggiornati</string>
     <string name="manual_widget_instruction">Aggiungi manualmente il widget: tieni premuto sulla schermata principale &gt; Widget &gt; Cerca "Widget Calendario SIAK"</string>
-    <!-- Widget strings -->
+    <!-- Widget strings - Enhanced for modern design -->
     <string name="widget_description">Visualizza eventi del calendario SIAK in tempo reale sulla schermata principale.</string>
-    <string name="widget_loading">📅 Caricamento eventi…</string>
-    <string name="widget_no_events">❌ Nessun evento trovato</string>
+    <string name="widget_loading">🔄 Caricamento eventi…</string>
+    <string name="widget_no_events">📅 Nessun evento in programma</string>
     <string name="widget_header_events">📅 CALENDARIO SIAK (%d eventi)</string>
-    <string name="widget_error">❌ Errore: %s</string>
-    <string name="widget_network_timeout">⚠️ Timeout di rete</string>
+    <string name="widget_error">❌ Errore di connessione</string>
+    <string name="widget_network_timeout">⚠️ Connessione lenta</string>
     <string name="widget_network_unreachable">⚠️ Server non raggiungibile</string>
-    <string name="widget_network_error">⚠️ Errore di connessione</string>
+    <string name="widget_network_error">⚠️ Errore di rete</string>
     <string name="widget_last_sync">ℹ️ Ultima sincronizzazione: %s</string>
-    <string name="widget_updated_footer">🔄 Aggiornato: %s</string>
+    <string name="widget_updated_footer">Aggiornato: %s</string>
     <string name="event_no_title">Nessun titolo</string>
     <string name="unknown_error">Errore sconosciuto</string>
     <string name="instructions_text">Per aggiungere il widget, tieni premuto sulla schermata principale, scegli “Widget”, poi cerca “Widget Calendario SIAK”.</string>
@@ -31,8 +31,8 @@
     <string name="badge_past">PASSATO</string>
     <string name="badge_upcoming">PROSSIMO</string>
     
-    <!-- Button labels -->
-    <string name="button_reset">RESET</string>
+    <!-- Button labels - Modern design -->
+    <string name="button_reset">R</string>
     <string name="button_refresh">⟳</string>
     
     <!-- Event details -->
