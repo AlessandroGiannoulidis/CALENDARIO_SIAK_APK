@@ -22,4 +22,25 @@
     <string name="event_no_title">Nessun titolo</string>
     <string name="unknown_error">Errore sconosciuto</string>
     <string name="instructions_text">Per aggiungere il widget, tieni premuto sulla schermata principale, scegli “Widget”, poi cerca “Widget Calendario SIAK”.</string>
+    
+    <!-- Additional strings for new design -->
+    <string name="widget_title">CALENDARIO SIAK</string>
+    
+    <!-- Event status badges -->
+    <string name="badge_today">OGGI</string>
+    <string name="badge_past">PASSATO</string>
+    <string name="badge_upcoming">PROSSIMO</string>
+    
+    <!-- Button labels -->
+    <string name="button_reset">RESET</string>
+    <string name="button_refresh">⟳</string>
+    
+    <!-- Event details -->
+    <string name="event_location_prefix">📍 %s</string>
+    <string name="event_time_separator"> • </string>
+    
+    <!-- Accessibility -->
+    <string name="content_description_reset">Resetta widget</string>
+    <string name="content_description_refresh">Aggiorna eventi</string>
+    <string name="content_description_event_card">Evento del calendario</string>
 </resources>
