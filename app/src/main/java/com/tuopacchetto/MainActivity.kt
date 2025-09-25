@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         addWidgetButton.setOnClickListener {
             requestPinWidget()
+            ToastUtils.showToast(this, R.string.manual_widget_instruction, isLong = true)
         }
     }
 
@@ -49,11 +50,10 @@ class MainActivity : AppCompatActivity() {
     private fun requestPinWidget() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val componentName = ComponentName(this, PwaWidget::class.java)
-
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             appWidgetManager.requestPinAppWidget(componentName, null, null)
         } else {
-            ToastUtils.showToast(this, R.string.manual_widget_instruction, isLong = true)
+            // Mostra istruzioni manuali già gestite sopra con Toast
         }
     }
 }
