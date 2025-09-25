@@ -82,7 +82,7 @@ class PwaWidget : AppWidgetProvider() {
             for (component in calendar.components) {
                 if (component.name == Component.VEVENT) {
                     val event = component as VEvent
-                    val summary = event.summary?.value ?: "Nessun titolo"
+                    val summary = event.summary?.value ?: context.getString(R.string.event_no_title)
                     val startDateStr = event.startDate?.value ?: continue
                     
                     Log.d("PwaWidget", "Evento trovato: $summary, data: $startDateStr")
@@ -167,7 +167,7 @@ class PwaWidget : AppWidgetProvider() {
         views.removeAllViews(R.id.widget_events)
         
         val loadingView = RemoteViews(context.packageName, R.layout.widget_event_item)
-        loadingView.setTextViewText(R.id.event_title, "📅 Caricamento eventi...")
+        loadingView.setTextViewText(R.id.event_title, context.getString(R.string.widget_loading))
         views.addView(R.id.widget_events, loadingView)
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
@@ -185,17 +185,17 @@ class PwaWidget : AppWidgetProvider() {
                     
                     if (events.isEmpty()) {
                         val noEventsView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                        noEventsView.setTextViewText(R.id.event_title, "❌ Nessun evento trovato")
+                        noEventsView.setTextViewText(R.id.event_title, context.getString(R.string.widget_no_events))
                         updatedViews.addView(R.id.widget_events, noEventsView)
                         
                         // Aggiungi info di debug
                         val debugView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                        debugView.setTextViewText(R.id.event_title, "ℹ️ Ultima sincronizzazione: ${SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())}")
+                        debugView.setTextViewText(R.id.event_title, context.getString(R.string.widget_last_sync, SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())))
                         updatedViews.addView(R.id.widget_events, debugView)
                     } else {
                         // Aggiungi header con info
                         val headerView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                        headerView.setTextViewText(R.id.event_title, "📅 CALENDARIO SIAK (${events.size} eventi)")
+                        headerView.setTextViewText(R.id.event_title, context.getString(R.string.widget_header_events, events.size))
                         updatedViews.addView(R.id.widget_events, headerView)
                         
                         val currentTime = Date()
@@ -215,7 +215,7 @@ class PwaWidget : AppWidgetProvider() {
                         
                         // Aggiungi footer con timestamp
                         val footerView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                        footerView.setTextViewText(R.id.event_title, "🔄 Aggiornato: ${SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(Date())}")
+                        footerView.setTextViewText(R.id.event_title, context.getString(R.string.widget_updated_footer, SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(Date())))
                         updatedViews.addView(R.id.widget_events, footerView)
                     }
 
@@ -231,7 +231,7 @@ class PwaWidget : AppWidgetProvider() {
                     val errorViews = RemoteViews(context.packageName, R.layout.pwa_widget_layout)
                     errorViews.removeAllViews(R.id.widget_events)
                     val errorView = RemoteViews(context.packageName, R.layout.widget_event_item)
-                    errorView.setTextViewText(R.id.event_title, "❌ Errore: ${e.message}")
+                    errorView.setTextViewText(R.id.event_title, context.getString(R.string.widget_error, e.message ?: "Unknown error"))
                     errorViews.addView(R.id.widget_events, errorView)
                     appWidgetManager.updateAppWidget(appWidgetId, errorViews)
                 }
