@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SIAK Calendar Widget</string>
+    <string name="widget_description">Displays SIAK calendar events</string>
+</resources>
