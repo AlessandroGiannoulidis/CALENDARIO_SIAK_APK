@@ -6,13 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import it.alessandrogiannoulidis.calendariosiak.utils.ToastUtils
 
 class MainActivity : AppCompatActivity() {
-
-    // Toast globale per tutta l'activity, non floodabile
-    private var lastToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +20,12 @@ class MainActivity : AppCompatActivity() {
         val refreshButton = findViewById<Button>(R.id.refreshButton)
         val addWidgetButton = findViewById<Button>(R.id.addWidgetButton)
 
-        titleText.text = "Widget Calendario SIAK"
-        statusText.text = "App installata correttamente. Ora puoi aggiungere il widget alla schermata principale."
+        titleText.text = getString(R.string.main_title)
+        statusText.text = getString(R.string.main_status_text)
 
         refreshButton.setOnClickListener {
             refreshAllWidgets()
-            showSingleToast("Widget aggiornati")
+            ToastUtils.showToast(this, R.string.widget_updated)
         }
 
         addWidgetButton.setOnClickListener {
@@ -56,16 +53,7 @@ class MainActivity : AppCompatActivity() {
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             appWidgetManager.requestPinAppWidget(componentName, null, null)
         } else {
-            showSingleToast(
-                "Aggiungi manualmente il widget: tieni premuto sulla schermata principale > Widget > Trova 'Widget Calendario SIAK'",
-                isLong = true
-            )
+            ToastUtils.showToast(this, R.string.manual_widget_instruction, isLong = true)
         }
-    }
-
-    // Metodo unico per mostrare Toast senza flood
-    private fun showSingleToast(message: String, isLong: Boolean = false) {
-        lastToast?.cancel()
-        ToastUtils.showToast(context, context.getString(R.string.nome_stringa))
     }
 }

@@ -1,4 +1,26 @@
 <resources>
     <string name="app_name">SIAK Calendar Widget</string>
-    <string name="widget_description">Displays SIAK calendar events</string>
+    <string name="widget_description">Displays SIAK calendar events in real-time on the home screen</string>
+    
+    <!-- MainActivity strings -->
+    <string name="main_title">SIAK Calendar Widget</string>
+    <string name="main_status_text">App installed successfully. You can now add the widget to your home screen.</string>
+    <string name="widget_updated">Widgets updated</string>
+    <string name="manual_widget_instruction">Add widget manually: long press on home screen > Widgets > Find \'SIAK Calendar Widget\'</string>
+    <string name="refresh_button_text">Refresh Widget</string>
+    <string name="add_widget_button_text">Add Widget to Home Screen</string>
+    <string name="instructions_text">Instructions:\n1. Long press on home screen\n2. Select \'Widgets\'\n3. Find \'SIAK Calendar Widget\'\n4. Drag it where you want</string>
+    
+    <!-- Widget strings -->
+    <string name="widget_loading">📅 Loading events…</string>
+    <string name="widget_no_events">❌ No events found</string>
+    <string name="widget_header_events">📅 SIAK CALENDAR (%d events)</string>
+    <string name="widget_error">❌ Error: %s</string>
+    <string name="widget_network_timeout">⚠️ Network timeout</string>
+    <string name="widget_network_unreachable">⚠️ Server unreachable</string>
+    <string name="widget_network_error">⚠️ Connection error</string>
+    <string name="widget_last_sync">ℹ️ Last sync: %s</string>
+    <string name="widget_updated_footer">🔄 Updated: %s</string>
+    <string name="event_no_title">No title</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>
