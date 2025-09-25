@@ -44,7 +44,7 @@ class PwaWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.d("PwaWidget", "onReceive: ${intent.action}")
-        
+
         when (intent.action) {
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
                 val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -73,16 +73,16 @@ class PwaWidget : AppWidgetProvider() {
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val views = RemoteViews(context.packageName, R.layout.widget_layout)
-        
+
         // Setup button click listeners
         setupButtonClickListeners(context, views, appWidgetId)
-        
+
         // Show loading state
         views.setTextViewText(R.id.widgetFooter, context.getString(R.string.widget_loading))
         views.setTextViewText(R.id.eventCount, "...")
-        views.setViewVisibility(R.id.emptyState, RemoteViews.INVISIBLE)
-        views.setViewVisibility(R.id.eventsContainer, RemoteViews.VISIBLE)
-        
+        views.setViewVisibility(R.id.emptyState, 4) // INVISIBLE
+        views.setViewVisibility(R.id.eventsContainer, 0) // VISIBLE
+
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
         Thread {
@@ -103,7 +103,7 @@ class PwaWidget : AppWidgetProvider() {
         )
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent)
 
-        // Refresh button  
+        // Refresh button
         val refreshIntent = Intent(context, PwaWidget::class.java).apply {
             action = ACTION_REFRESH
         }
@@ -114,63 +114,63 @@ class PwaWidget : AppWidgetProvider() {
     }
 
     private fun populateWidget(
-        context: Context, 
-        appWidgetManager: AppWidgetManager, 
+        context: Context,
+        appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
         views: RemoteViews,
         events: List<CalendarEvent>
     ) {
         // Clear the events container
         views.removeAllViews(R.id.eventsContainer)
-        
+
         if (events.isEmpty()) {
             // Show empty state
-            views.setViewVisibility(R.id.emptyState, RemoteViews.VISIBLE)
-            views.setViewVisibility(R.id.eventsContainer, RemoteViews.INVISIBLE)
+            views.setViewVisibility(R.id.emptyState, 0) // VISIBLE
+            views.setViewVisibility(R.id.eventsContainer, 4) // INVISIBLE
             views.setTextViewText(R.id.eventCount, "0 eventi")
         } else {
             // Hide empty state and populate events
-            views.setViewVisibility(R.id.emptyState, RemoteViews.INVISIBLE)
-            views.setViewVisibility(R.id.eventsContainer, RemoteViews.VISIBLE)
+            views.setViewVisibility(R.id.emptyState, 4) // INVISIBLE
+            views.setViewVisibility(R.id.eventsContainer, 0) // VISIBLE
             views.setTextViewText(R.id.eventCount, "${events.size} eventi")
-            
+
             // Add each event as a separate RemoteViews
             for (event in events.take(5)) { // Limit to 5 events for widget size
                 val eventView = createEventView(context, event)
                 views.addView(R.id.eventsContainer, eventView)
             }
         }
-        
+
         // Update footer with current time
         val updated = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(System.currentTimeMillis())
         views.setTextViewText(R.id.widgetFooter, context.getString(R.string.widget_updated_footer, updated))
-        
+
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     private fun createEventView(context: Context, event: CalendarEvent): RemoteViews {
         val preferences = context.getSharedPreferences("widget_settings", Context.MODE_PRIVATE)
         val isCompact = preferences.getBoolean("compact_mode", false)
-        
+
         val eventView = RemoteViews(context.packageName, R.layout.widget_event_item)
-        
+
         // Set event title
         eventView.setTextViewText(R.id.eventTitle, event.title)
-        
+
         // Set event time
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         eventView.setTextViewText(R.id.eventTime, timeFormat.format(event.startTime))
-        
+
         // Set location if available
         if (!event.location.isNullOrEmpty()) {
             eventView.setTextViewText(R.id.eventLocation, event.location)
-            eventView.setViewVisibility(R.id.eventLocation, RemoteViews.VISIBLE)
-            eventView.setViewVisibility(R.id.eventSeparator, RemoteViews.VISIBLE)
+            eventView.setViewVisibility(R.id.eventLocation, 0) // VISIBLE
+            eventView.setViewVisibility(R.id.eventSeparator, 0) // VISIBLE
         } else {
-            eventView.setViewVisibility(R.id.eventLocation, RemoteViews.GONE)
-            eventView.setViewVisibility(R.id.eventSeparator, RemoteViews.GONE)
+            eventView.setViewVisibility(R.id.eventLocation, 8) // GONE
+            eventView.setViewVisibility(R.id.eventSeparator, 8) // GONE
         }
-        
+
         // Apply compact mode styling
         if (isCompact) {
             // Reduce text sizes for compact mode
@@ -179,10 +179,10 @@ class PwaWidget : AppWidgetProvider() {
             if (!event.location.isNullOrEmpty()) {
                 eventView.setTextViewTextSize(R.id.eventLocation, android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
             }
-            // Make badge smaller in compact mode  
+            // Make badge smaller in compact mode
             eventView.setTextViewTextSize(R.id.statusBadge, android.util.TypedValue.COMPLEX_UNIT_SP, 7f)
         }
-        
+
         // Set status border and badge based on event status
         val status = event.getStatusType()
         when (status) {
@@ -190,7 +190,7 @@ class PwaWidget : AppWidgetProvider() {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_today)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_today))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_background)
-                eventView.setViewVisibility(R.id.statusBadge, RemoteViews.VISIBLE)
+                eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
                 // Full opacity for today events
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
@@ -199,20 +199,20 @@ class PwaWidget : AppWidgetProvider() {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_past)
                 eventView.setTextViewText(R.id.statusBadge, context.getString(R.string.badge_past))
                 eventView.setInt(R.id.statusBadge, "setBackgroundResource", R.drawable.badge_past_background)
-                eventView.setViewVisibility(R.id.statusBadge, RemoteViews.VISIBLE)
+                eventView.setViewVisibility(R.id.statusBadge, 0) // VISIBLE
                 // Reduced opacity for past events
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_past, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_past, null))
             }
             EventStatus.UPCOMING -> {
                 eventView.setInt(R.id.statusBorder, "setBackgroundResource", R.drawable.border_upcoming)
-                eventView.setViewVisibility(R.id.statusBadge, RemoteViews.GONE)
+                eventView.setViewVisibility(R.id.statusBadge, 8) // GONE
                 // Full opacity for upcoming events
                 eventView.setTextColor(R.id.eventTitle, context.resources.getColor(R.color.widget_text_primary, null))
                 eventView.setTextColor(R.id.eventTime, context.resources.getColor(R.color.widget_text_secondary, null))
             }
         }
-        
+
         return eventView
     }
 
@@ -256,7 +256,7 @@ class PwaWidget : AppWidgetProvider() {
                     val summary = event.summary?.value ?: context.getString(R.string.event_no_title)
                     val startDateString = event.startDate?.value
                     val location = event.location?.value
-                    
+
                     var startDate: Date? = null
                     if (startDateString != null) {
                         for (fmt in inputFormats) {
@@ -269,7 +269,7 @@ class PwaWidget : AppWidgetProvider() {
                             } catch (_: Exception) {}
                         }
                     }
-                    
+
                     if (startDate != null) {
                         val calendarEvent = CalendarEvent(
                             title = summary,
@@ -280,10 +280,10 @@ class PwaWidget : AppWidgetProvider() {
                     }
                 }
             }
-            
+
             // Sort events by start time
             eventsList.sortBy { it.startTime }
-            
+
             if (eventsList.isEmpty()) {
                 emptyList()
             } else {
