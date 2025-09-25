@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.android.application") version "8.1.2"
-    id("org.jetbrains.kotlin.android") version "1.8.22"
+    id("com.android.application") version "8.1.1" apply false
+    id("org.jetbrains.kotlin.android") version "1.8.20" apply false
 }
 
 android {
