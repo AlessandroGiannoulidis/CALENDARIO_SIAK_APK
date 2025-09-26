@@ -1,32 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
+    <!-- Permission esistenti mantenute -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    
+
     <application
         android:allowBackup="true"
         android:label="Widget Calendario SIAK"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.Material3.DayNight.NoActionBar"
         android:exported="true"
         tools:targetApi="31">
 
-        <!-- Activity principale per compatibilità -->
+        <!-- Nuova Activity principale (Compose) -->
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:name="com.tuopacchetto.ui.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Receiver del widget con configurazione migliorata -->
-        <receiver 
-            android:name=".PwaWidget" 
+        <!-- Receiver del widget esistente mantenuto -->
+        <receiver
+            android:name=".PwaWidget"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -38,6 +41,17 @@
                 android:resource="@xml/pwa_widget_info" />
         </receiver>
 
-    </application>
+        <!-- Nuovo Glance App Widget Receiver (aggiuntivo) -->
+        <receiver
+            android:name="com.tuopacchetto.widget.NextEventWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/next_event_widget_info" />
+        </receiver>
 
+    </application>
 </manifest>
